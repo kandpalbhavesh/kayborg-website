@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import { Syne, DM_Sans, Instrument_Serif, Figtree, DM_Mono } from "next/font/google";
 import "./globals.css";
 
 const syne = Syne({
@@ -13,6 +13,28 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-figtree",
+  display: "swap",
+});
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-dm-mono",
   display: "swap",
 });
 
@@ -48,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${syne.variable} ${dmSans.variable} ${instrumentSerif.variable} ${figtree.variable} ${dmMono.variable}`}>
       <body>{children}</body>
     </html>
   );
