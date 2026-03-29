@@ -1,23 +1,54 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+
+// RFC 5322-compliant email validation
+function isValidEmail(email: string): boolean {
+  if (!email || email.length > 254) return false
+  // Sanitize — reject any HTML or script characters
+  if (/[<>"'`]/.test(email)) return false
+  const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
+  return re.test(email)
+}
+
+// Simple client-side rate limit — max 3 attempts per session
+let submitCount = 0
 
 export default function Waitlist() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
   const [isValid, setIsValid] = useState(false)
-
-  const validateEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-    setIsValid(validateEmail(e.target.value))
+    // Strip any HTML tags from input before storing
+    const raw = e.target.value.replace(/<[^>]*>/g, '').slice(0, 254)
+    setEmail(raw)
+    setIsValid(isValidEmail(raw))
+    if (error) setError('')
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isValid) return
+
+    // Rate limit
+    if (submitCount >= 3) {
+      setError('Too many attempts. Please try again later.')
+      return
+    }
+
+    // Re-validate server-side style on submit
+    const sanitized = email.trim().replace(/<[^>]*>/g, '')
+    if (!isValidEmail(sanitized)) {
+      setError('Please enter a valid email address.')
+      inputRef.current?.focus()
+      return
+    }
+
+    submitCount++
     setSubmitted(true)
+    setError('')
   }
 
   return (
@@ -30,129 +61,151 @@ export default function Waitlist() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 24px',
+        padding: 'clamp(80px, 10vh, 120px) clamp(20px, 5vw, 48px)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Large gold ambient glow */}
+      {/* Ambient glow */}
       <div style={{
         position: 'absolute',
-        top: '40%',
-        left: '50%',
+        top: '40%', left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '800px',
-        height: '500px',
+        width: '700px', height: '500px',
         background: 'radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 65%)',
         pointerEvents: 'none',
       }} />
 
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '560px' }}>
         {/* Label */}
-        <div
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: '9px',
-            color: 'rgba(200,169,110,0.4)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            marginBottom: '40px',
-          }}
-        >
+        <div style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 700,
+          fontSize: '9px',
+          color: 'rgba(200,169,110,0.4)',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          marginBottom: '40px',
+        }}>
           Launching 2026
         </div>
 
         {/* Headline */}
-        <h2
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 800,
-            fontSize: 'clamp(40px, 7vw, 88px)',
-            color: '#F0EDE8',
-            lineHeight: 0.95,
-            letterSpacing: '-0.04em',
-            margin: '0 0 40px',
-          }}
-        >
-          The ad that<br /><span style={{ color: '#C8A96E' }}>cannot be blocked.</span>
+        <h2 style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 800,
+          fontSize: 'clamp(36px, 7vw, 88px)',
+          color: '#F0EDE8',
+          lineHeight: 0.95,
+          letterSpacing: '-0.04em',
+          margin: '0 0 40px',
+        }}>
+          The ad that<br />
+          <span style={{ color: '#C8A96E' }}>cannot be blocked.</span>
         </h2>
 
         {/* Sub copy */}
-        <p
-          style={{
-            fontFamily: 'var(--font-dm-sans)',
-            fontWeight: 300,
-            fontSize: '16px',
-            color: 'rgba(240,237,232,0.35)',
-            maxWidth: '400px',
-            margin: '0 auto 56px',
-            lineHeight: 1.65,
-          }}
-        >
+        <p style={{
+          fontFamily: 'var(--font-dm-sans)',
+          fontWeight: 300,
+          fontSize: 'clamp(14px, 2vw, 16px)',
+          color: 'rgba(240,237,232,0.35)',
+          maxWidth: '400px',
+          margin: '0 auto 48px',
+          lineHeight: 1.65,
+        }}>
           We&apos;re building this in India first.
           The first cohort is small on purpose.
-
           If you&apos;ve been waiting for the format to change —
           this is the moment.
         </p>
 
-        {/* Email Form */}
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
-          style={{
-            maxWidth: '420px',
-            width: '100%',
-            margin: '0 auto',
-            display: 'flex',
-          }}
+          noValidate
+          aria-label="Join the waitlist"
+          style={{ width: '100%', margin: '0 auto' }}
         >
-          <input
-            type="email"
-            value={submitted ? '' : email}
-            onChange={handleChange}
-            placeholder={submitted ? "You're on the list. We'll be in touch before launch." : 'your@email.com'}
-            disabled={submitted}
-            style={{
-              flex: 1,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(200,169,110,0.2)',
-              borderRight: 'none',
-              borderRadius: '24px 0 0 24px',
-              padding: '14px 20px',
-              color: '#F0EDE8',
-              fontFamily: 'var(--font-dm-sans)',
-              fontWeight: 400,
-              fontSize: '14px',
-              outline: 'none',
-              minWidth: 0,
-            }}
-            onFocus={e => { e.target.style.borderColor = 'rgba(200,169,110,0.5)' }}
-            onBlur={e => { e.target.style.borderColor = 'rgba(200,169,110,0.2)' }}
-          />
-          <button
-            type="submit"
-            style={{
-              background: submitted ? '#00E5C3' : '#C8A96E',
-              color: '#0C0C0E',
-              fontFamily: 'var(--font-syne)',
-              fontWeight: 700,
-              fontSize: '12px',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              borderRadius: '0 24px 24px 0',
-              padding: '14px 24px',
-              border: 'none',
-              cursor: submitted ? 'default' : 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'opacity 0.2s, background 0.3s',
-            }}
-            onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.85' }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
-          >
-            {submitted ? 'Done ✓' : 'Join the Waitlist'}
-          </button>
+          <div style={{ display: 'flex', width: '100%' }}>
+            <input
+              ref={inputRef}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={submitted ? '' : email}
+              onChange={handleChange}
+              placeholder={submitted ? "You're on the list. We'll be in touch." : 'your@email.com'}
+              disabled={submitted}
+              maxLength={254}
+              aria-label="Email address"
+              aria-invalid={!!error}
+              aria-describedby={error ? 'waitlist-error' : undefined}
+              style={{
+                flex: 1,
+                background: 'rgba(255,255,255,0.04)',
+                border: error ? '1px solid rgba(255,80,80,0.5)' : '1px solid rgba(200,169,110,0.2)',
+                borderRight: 'none',
+                borderRadius: '24px 0 0 24px',
+                padding: 'clamp(12px, 2vw, 14px) 20px',
+                color: '#F0EDE8',
+                fontFamily: 'var(--font-dm-sans)',
+                fontWeight: 400,
+                fontSize: '14px',
+                outline: 'none',
+                minWidth: 0,
+                transition: 'border-color 0.2s',
+              }}
+              onFocus={e => {
+                if (!error) e.target.style.borderColor = 'rgba(200,169,110,0.5)'
+              }}
+              onBlur={e => {
+                if (!error) e.target.style.borderColor = 'rgba(200,169,110,0.2)'
+              }}
+            />
+            <button
+              type="submit"
+              disabled={submitted}
+              style={{
+                background: submitted ? '#00E5C3' : '#C8A96E',
+                color: '#0C0C0E',
+                fontFamily: 'var(--font-syne)',
+                fontWeight: 700,
+                fontSize: 'clamp(10px, 1.5vw, 12px)',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                borderRadius: '0 24px 24px 0',
+                padding: 'clamp(12px, 2vw, 14px) clamp(16px, 3vw, 24px)',
+                border: 'none',
+                cursor: submitted ? 'default' : 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'opacity 0.2s, background 0.3s',
+                minWidth: '120px',
+              }}
+              onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.85' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+            >
+              {submitted ? 'Done ✓' : 'Join the Waitlist'}
+            </button>
+          </div>
+
+          {/* Error message */}
+          {error && (
+            <p
+              id="waitlist-error"
+              role="alert"
+              style={{
+                fontFamily: 'var(--font-dm-sans)',
+                fontSize: '12px',
+                color: 'rgba(255,100,100,0.8)',
+                marginTop: '10px',
+                textAlign: 'left',
+              }}
+            >
+              {error}
+            </p>
+          )}
         </form>
       </div>
     </section>

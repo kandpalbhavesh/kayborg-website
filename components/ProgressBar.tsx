@@ -7,20 +7,29 @@ export default function ProgressBar() {
 
   useEffect(() => {
     const update = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0)
+      try {
+        const scrollTop = window.scrollY ?? 0
+        const docHeight = (document.documentElement.scrollHeight ?? 0) - (window.innerHeight ?? 0)
+        setProgress(docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0)
+      } catch {
+        // silent — DOM not ready
+      }
     }
     window.addEventListener('scroll', update, { passive: true })
+    update()
     return () => window.removeEventListener('scroll', update)
   }, [])
 
   return (
     <div
+      role="progressbar"
+      aria-valuenow={Math.round(progress)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label="Page scroll progress"
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
+        top: 0, left: 0,
         height: '2px',
         width: `${progress}%`,
         background: 'linear-gradient(to right, #C8A96E, #00E5C3)',

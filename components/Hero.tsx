@@ -30,8 +30,12 @@ export default function Hero() {
   }, [])
 
   const scrollToWaitlist = () => {
-    const el = document.querySelector('#waitlist')
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
+    try {
+      const el = document.getElementById('waitlist')
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    } catch {
+      // silent
+    }
   }
 
   return (
@@ -43,93 +47,85 @@ export default function Hero() {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#0C0C0E',
-        padding: '52px 24px 80px',
+        padding: 'clamp(72px, 10vh, 100px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
         textAlign: 'center',
         position: 'relative',
       }}
     >
-      {/* Subtle radial glow */}
+      {/* Ambient glow */}
       <div style={{
         position: 'absolute',
-        top: '30%',
-        left: '50%',
+        top: '30%', left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '600px',
+        width: 'min(600px, 90vw)',
         height: '400px',
         background: 'radial-gradient(ellipse, rgba(200,169,110,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
-      <div style={{ maxWidth: '800px', width: '100%', position: 'relative' }}>
-        <div
-          ref={labelRef}
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: '10px',
-            color: 'rgba(200,169,110,0.5)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            marginBottom: '40px',
-            opacity: 0,
-          }}
-        >
+      <div style={{ maxWidth: 'min(800px, 100%)', width: '100%', position: 'relative' }}>
+        {/* Label */}
+        <div ref={labelRef} style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 700,
+          fontSize: '10px',
+          color: 'rgba(200,169,110,0.5)',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          marginBottom: '40px',
+          opacity: 0,
+        }}>
           Launching 2026 · India
         </div>
 
-        <h1
-          ref={h1Ref}
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 800,
-            fontSize: 'clamp(56px, 9vw, 116px)',
-            color: '#F0EDE8',
-            letterSpacing: '-0.05em',
-            lineHeight: 0.92,
-            margin: 0,
-            opacity: 0,
-          }}
-        >
+        {/* H1 */}
+        <h1 ref={h1Ref} style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 800,
+          fontSize: 'clamp(48px, 9vw, 116px)',
+          color: '#F0EDE8',
+          letterSpacing: '-0.05em',
+          lineHeight: 0.92,
+          margin: 0,
+          opacity: 0,
+        }}>
           Advertising.
         </h1>
 
-        <h2
-          ref={h2Ref}
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 800,
-            fontSize: 'clamp(56px, 9vw, 116px)',
-            color: '#C8A96E',
-            letterSpacing: '-0.05em',
-            lineHeight: 0.92,
-            margin: '0 0 40px',
-            opacity: 0,
-          }}
-        >
+        {/* H2 */}
+        <h2 ref={h2Ref} style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 800,
+          fontSize: 'clamp(48px, 9vw, 116px)',
+          color: '#C8A96E',
+          letterSpacing: '-0.05em',
+          lineHeight: 0.92,
+          margin: '0 0 clamp(24px, 4vh, 40px)',
+          opacity: 0,
+        }}>
           Reinvented.
         </h2>
 
-        <p
-          ref={subRef}
-          style={{
-            fontFamily: 'var(--font-dm-sans)',
-            fontWeight: 300,
-            fontSize: '18px',
-            color: 'rgba(240,237,232,0.5)',
-            maxWidth: '420px',
-            margin: '0 auto 40px',
-            lineHeight: 1.65,
-            opacity: 0,
-          }}
-        >
-          The people you are trying to reach
-          decided they were done a long time ago.
+        {/* Sub copy */}
+        <p ref={subRef} style={{
+          fontFamily: 'var(--font-dm-sans)',
+          fontWeight: 300,
+          fontSize: 'clamp(15px, 2.5vw, 18px)',
+          color: 'rgba(240,237,232,0.5)',
+          maxWidth: '420px',
+          margin: '0 auto clamp(28px, 4vh, 40px)',
+          lineHeight: 1.65,
+          opacity: 0,
+        }}>
+          The people you are trying to reach decided they were done a long time ago.
           We found a way back in.
         </p>
 
+        {/* CTA */}
         <button
           ref={btnRef}
           onClick={scrollToWaitlist}
+          aria-label="Join the KayBorg AI waitlist"
           style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 700,
@@ -138,11 +134,13 @@ export default function Hero() {
             background: '#C8A96E',
             border: 'none',
             borderRadius: '24px',
-            padding: '13px 30px',
+            padding: 'clamp(11px, 2vw, 13px) clamp(24px, 4vw, 30px)',
             cursor: 'pointer',
             letterSpacing: '0.04em',
             opacity: 0,
-            transition: 'opacity 0.2s, transform 0.2s',
+            transition: 'opacity 0.2s',
+            minHeight: '44px',
+            minWidth: '160px',
           }}
           onMouseEnter={e => { e.currentTarget.style.opacity = '0.85' }}
           onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
@@ -152,22 +150,17 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-        }}
-      >
-        <div
-          style={{
-            width: '1px',
-            height: '40px',
-            background: 'linear-gradient(to bottom, transparent, rgba(200,169,110,0.4))',
-            animation: 'scrollPulse 1.8s ease-in-out infinite',
-          }}
-        />
+      <div style={{
+        position: 'absolute',
+        bottom: '28px', left: '50%',
+        transform: 'translateX(-50%)',
+        pointerEvents: 'none',
+      }}>
+        <div style={{
+          width: '1px', height: '40px',
+          background: 'linear-gradient(to bottom, transparent, rgba(200,169,110,0.4))',
+          animation: 'scrollPulse 1.8s ease-in-out infinite',
+        }} />
         <style>{`
           @keyframes scrollPulse {
             0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
