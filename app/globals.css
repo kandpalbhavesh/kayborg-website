@@ -32,21 +32,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Locomotive Scroll */
-html.has-scroll-smooth {
-  overflow: hidden;
-}
-
-html.has-scroll-dragging {
-  user-select: none;
-}
-
-.has-scroll-smooth body {
-  overflow: hidden;
-}
-
-.has-scroll-smooth [data-scroll-container] {
-  min-height: 100vh;
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
 
 [data-scroll-direction="horizontal"] [data-scroll-container] {

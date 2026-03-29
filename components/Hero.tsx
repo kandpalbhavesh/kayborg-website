@@ -2,11 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
-interface HeroProps {
-  scrollInstance?: React.MutableRefObject<any>
-}
-
-export default function Hero({ scrollInstance }: HeroProps) {
+export default function Hero() {
   const labelRef = useRef<HTMLDivElement>(null)
   const h1Ref = useRef<HTMLHeadingElement>(null)
   const h2Ref = useRef<HTMLHeadingElement>(null)
@@ -36,12 +32,7 @@ export default function Hero({ scrollInstance }: HeroProps) {
 
   const scrollToWaitlist = () => {
     const el = document.querySelector('#waitlist')
-    if (!el) return
-    if (scrollInstance?.current) {
-      scrollInstance.current.scrollTo(el)
-    } else {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (

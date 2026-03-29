@@ -1,7 +1,6 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useLocomotiveScroll } from '@/hooks/useLocomotiveScroll'
 
 const Nav = dynamic(() => import('@/components/Nav'), { ssr: false })
 const Hero = dynamic(() => import('@/components/Hero'), { ssr: false })
@@ -73,42 +72,36 @@ const chapter4Beats = [
 ]
 
 export default function Home() {
-  const { containerRef, scroll } = useLocomotiveScroll()
-
   return (
     <>
-      <ProgressBar scrollInstance={scroll} />
-      <Nav scrollInstance={scroll} />
-      <div data-scroll-container ref={containerRef}>
-        <Hero scrollInstance={scroll} />
+      <ProgressBar />
+      <Nav />
+      <div>
+        <Hero />
         <Stats />
         <Chapter
           id="chapter-problem"
           chapterIndex={0}
           beatTag="Something broke"
           beats={chapter1Beats}
-          scrollInstance={scroll}
         />
         <Chapter
           id="chapter-insight"
           chapterIndex={1}
           beatTag="But here is what nobody said out loud"
           beats={chapter2Beats}
-          scrollInstance={scroll}
         />
         <Chapter
           id="chapter-how"
           chapterIndex={2}
           beatTag="What we built"
           beats={chapter3Beats}
-          scrollInstance={scroll}
         />
         <Chapter
           id="chapter-creators"
           chapterIndex={3}
           beatTag="And the people who make the content"
           beats={chapter4Beats}
-          scrollInstance={scroll}
         />
         <Vision />
         <Waitlist />

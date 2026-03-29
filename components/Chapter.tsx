@@ -27,7 +27,7 @@ const illustrations = [
   Chapter4Illustration,
 ]
 
-export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstance }: ChapterProps) {
+export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterProps) {
   const [activeBeat, setActiveBeat] = useState(0)
   const sectionRef = useRef<HTMLDivElement>(null)
   const beatRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -41,7 +41,6 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
       const sectionHeight = sectionRef.current.offsetHeight
       const windowHeight = window.innerHeight
 
-      // How far we've scrolled into this section
       const scrolled = -rect.top
       const scrollable = sectionHeight - windowHeight
       const progress = Math.max(0, Math.min(1, scrolled / scrollable))
@@ -55,44 +54,11 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
       setActiveBeat(newBeat)
     }
 
-    // Listen on window scroll for SSR compatibility
     window.addEventListener('scroll', updateBeat, { passive: true })
-
-    // Also listen to locomotive scroll events if available
-    const checkLocomotive = () => {
-      if (scrollInstance?.current) {
-        scrollInstance.current.on('scroll', (args: any) => {
-          if (!sectionRef.current) return
-          const sectionTop = sectionRef.current.offsetTop
-          const sectionHeight = sectionRef.current.offsetHeight
-          const scrollY = args.scroll?.y ?? 0
-          const windowHeight = window.innerHeight
-
-          const scrolled = scrollY - sectionTop
-          const scrollable = sectionHeight - windowHeight
-          const progress = Math.max(0, Math.min(1, scrolled / scrollable))
-
-          let newBeat = 0
-          if (progress >= 0.75) newBeat = 3
-          else if (progress >= 0.5) newBeat = 2
-          else if (progress >= 0.25) newBeat = 1
-          else newBeat = 0
-
-          setActiveBeat(newBeat)
-        })
-      }
-    }
-
-    const timer = setTimeout(checkLocomotive, 1000)
     updateBeat()
+    return () => window.removeEventListener('scroll', updateBeat)
+  }, [])
 
-    return () => {
-      window.removeEventListener('scroll', updateBeat)
-      clearTimeout(timer)
-    }
-  }, [scrollInstance])
-
-  // Animate beats with GSAP
   useEffect(() => {
     const animateBeats = async () => {
       const { gsap } = await import('gsap')
@@ -114,8 +80,6 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
     <section
       ref={sectionRef}
       id={id}
-      data-scroll
-      data-scroll-section
       style={{ height: '300vh', position: 'relative' }}
     >
       <div
@@ -153,7 +117,6 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
             position: 'relative',
           }}
         >
-          {/* Beat tag */}
           <div
             style={{
               fontFamily: 'var(--font-syne)',
@@ -168,7 +131,6 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
             {beatTag}
           </div>
 
-          {/* Beats */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
             {beats.map((beat, i) => (
               <div
@@ -181,8 +143,7 @@ export default function Chapter({ id, chapterIndex, beatTag, beats, scrollInstan
                   lineHeight: 1.5,
                   color: i === 0 ? '#111111' : '#6B6B6B',
                   opacity: i === 0 ? 1 : 0,
-                  transform: i === 0 ? 'translateY(0)' : 'translateY(14px)',
-                  whiteSpace: 'pre-line',
+                  transform: i === 0 ? 'translateY(0px)' : 'translateY(14px)',
                 }}
                 dangerouslySetInnerHTML={{ __html: beat.html }}
               />

@@ -2,42 +2,19 @@
 
 import { useEffect, useState } from 'react'
 
-interface ProgressBarProps {
-  scrollInstance?: React.MutableRefObject<any>
-}
-
-export default function ProgressBar({ scrollInstance }: ProgressBarProps) {
+export default function ProgressBar() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const updateProgress = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
       const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
       setProgress(Math.min(100, Math.max(0, pct)))
     }
-
     window.addEventListener('scroll', updateProgress, { passive: true })
-    updateProgress()
-
-    // Also wire to locomotive scroll
-    const wireLocomotive = () => {
-      if (scrollInstance?.current) {
-        scrollInstance.current.on('scroll', (args: any) => {
-          const scrollY = args.scroll?.y ?? 0
-          const limit = args.limit?.y ?? 1
-          setProgress((scrollY / limit) * 100)
-        })
-      }
-    }
-
-    const timer = setTimeout(wireLocomotive, 1000)
-
-    return () => {
-      window.removeEventListener('scroll', updateProgress)
-      clearTimeout(timer)
-    }
-  }, [scrollInstance])
+    return () => window.removeEventListener('scroll', updateProgress)
+  }, [])
 
   return (
     <div

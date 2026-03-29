@@ -32,41 +32,18 @@ const KMark = ({ muted = false }: { muted?: boolean }) => (
   </svg>
 )
 
-interface NavProps {
-  scrollInstance?: React.MutableRefObject<any>
-}
-
-export default function Nav({ scrollInstance }: NavProps) {
+export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40)
-    }
-
-    // Also listen to locomotive scroll if available
-    const checkScrolled = () => {
-      const scroller = document.querySelector('[data-scroll-container]')
-      if (scroller) {
-        // handled by window scroll fallback
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    checkScrolled()
-
+    const handleScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const scrollTo = (id: string) => {
     const el = document.querySelector(id)
-    if (!el) return
-
-    if (scrollInstance?.current) {
-      scrollInstance.current.scrollTo(el)
-    } else {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -89,7 +66,6 @@ export default function Nav({ scrollInstance }: NavProps) {
         padding: '0 40px',
       }}
     >
-      {/* Left: Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <KMark />
         <span
@@ -105,10 +81,9 @@ export default function Nav({ scrollInstance }: NavProps) {
         </span>
       </div>
 
-      {/* Centre: Links */}
       <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
         <button
-          onClick={() => scrollTo('#how-it-works')}
+          onClick={() => scrollTo('#chapter-problem')}
           style={{
             fontFamily: 'var(--font-dm-sans)',
             fontWeight: 400,
@@ -139,10 +114,8 @@ export default function Nav({ scrollInstance }: NavProps) {
         </button>
       </div>
 
-      {/* Right: CTA */}
       <button
         onClick={() => scrollTo('#waitlist')}
-        className="nav-cta"
         style={{
           fontFamily: 'var(--font-syne)',
           fontWeight: 700,
@@ -157,14 +130,12 @@ export default function Nav({ scrollInstance }: NavProps) {
           transition: 'background 0.2s, color 0.2s',
         }}
         onMouseEnter={e => {
-          const t = e.currentTarget
-          t.style.background = '#111111'
-          t.style.color = '#ffffff'
+          e.currentTarget.style.background = '#111111'
+          e.currentTarget.style.color = '#ffffff'
         }}
         onMouseLeave={e => {
-          const t = e.currentTarget
-          t.style.background = 'transparent'
-          t.style.color = '#111111'
+          e.currentTarget.style.background = 'transparent'
+          e.currentTarget.style.color = '#111111'
         }}
       >
         Early Access
