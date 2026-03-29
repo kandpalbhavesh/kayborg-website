@@ -8,16 +8,13 @@ const Chapter2Illustration = dynamic(() => import('./illustrations/Chapter2Illus
 const Chapter3Illustration = dynamic(() => import('./illustrations/Chapter3Illustration'), { ssr: false })
 const Chapter4Illustration = dynamic(() => import('./illustrations/Chapter4Illustration'), { ssr: false })
 
-interface Beat {
-  html: string
-}
+interface Beat { html: string }
 
 interface ChapterProps {
   id: string
   chapterIndex: number
   beatTag: string
   beats: Beat[]
-  scrollInstance?: React.MutableRefObject<any>
 }
 
 const illustrations = [
@@ -31,7 +28,6 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
   const [activeBeat, setActiveBeat] = useState(0)
   const sectionRef = useRef<HTMLDivElement>(null)
   const beatRefs = useRef<(HTMLDivElement | null)[]>([])
-
   const IllustrationComponent = illustrations[chapterIndex]
 
   useEffect(() => {
@@ -40,20 +36,15 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
       const rect = sectionRef.current.getBoundingClientRect()
       const sectionHeight = sectionRef.current.offsetHeight
       const windowHeight = window.innerHeight
-
       const scrolled = -rect.top
       const scrollable = sectionHeight - windowHeight
       const progress = Math.max(0, Math.min(1, scrolled / scrollable))
-
       let newBeat = 0
       if (progress >= 0.75) newBeat = 3
       else if (progress >= 0.5) newBeat = 2
       else if (progress >= 0.25) newBeat = 1
-      else newBeat = 0
-
       setActiveBeat(newBeat)
     }
-
     window.addEventListener('scroll', updateBeat, { passive: true })
     updateBeat()
     return () => window.removeEventListener('scroll', updateBeat)
@@ -65,9 +56,9 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
       beatRefs.current.forEach((el, i) => {
         if (!el) return
         if (i === activeBeat) {
-          gsap.to(el, { opacity: 1, y: 0, color: '#111111', duration: 0.5, ease: 'power2.out' })
+          gsap.to(el, { opacity: 1, y: 0, color: '#F0EDE8', duration: 0.5, ease: 'power2.out' })
         } else if (i < activeBeat) {
-          gsap.to(el, { opacity: 0.15, y: 0, color: '#AEAEB2', duration: 0.4, ease: 'power2.out' })
+          gsap.to(el, { opacity: 0.15, y: 0, color: 'rgba(240,237,232,0.15)', duration: 0.4, ease: 'power2.out' })
         } else {
           gsap.to(el, { opacity: 0, y: 14, duration: 0.3, ease: 'power2.in' })
         }
@@ -80,7 +71,7 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
     <section
       ref={sectionRef}
       id={id}
-      style={{ height: '300vh', position: 'relative' }}
+      style={{ height: '300vh', position: 'relative', background: '#0C0C0E' }}
     >
       <div
         style={{
@@ -95,12 +86,12 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
         {/* Left: Illustration */}
         <div
           style={{
-            borderRight: '1px solid #E8E8E8',
+            borderRight: '1px solid rgba(255,255,255,0.07)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '60px 48px',
-            background: '#FFFFFF',
+            background: '#0C0C0E',
           }}
         >
           <IllustrationComponent />
@@ -113,7 +104,7 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
             flexDirection: 'column',
             justifyContent: 'center',
             padding: '60px 48px',
-            background: '#FFFFFF',
+            background: '#0C0C0E',
             position: 'relative',
           }}
         >
@@ -122,10 +113,11 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
               fontFamily: 'var(--font-syne)',
               fontWeight: 700,
               fontSize: '9px',
-              color: '#D72638',
+              color: '#C8A96E',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               marginBottom: '40px',
+              opacity: 0.7,
             }}
           >
             {beatTag}
@@ -141,7 +133,7 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
                   fontWeight: 300,
                   fontSize: 'clamp(17px, 2vw, 24px)',
                   lineHeight: 1.5,
-                  color: i === 0 ? '#111111' : '#6B6B6B',
+                  color: i === 0 ? '#F0EDE8' : 'rgba(240,237,232,0.5)',
                   opacity: i === 0 ? 1 : 0,
                   transform: i === 0 ? 'translateY(0px)' : 'translateY(14px)',
                 }}
@@ -169,7 +161,7 @@ export default function Chapter({ id, chapterIndex, beatTag, beats }: ChapterPro
                   width: '4px',
                   height: '4px',
                   borderRadius: '50%',
-                  background: i === activeBeat ? '#D72638' : '#E8E8E8',
+                  background: i === activeBeat ? '#C8A96E' : 'rgba(255,255,255,0.12)',
                   transition: 'background 0.3s',
                 }}
               />

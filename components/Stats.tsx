@@ -3,20 +3,19 @@
 export default function Stats() {
   return (
     <section
-      data-scroll
-      data-scroll-section
       style={{
-        borderTop: '1px solid #E8E8E8',
-        borderBottom: '1px solid #E8E8E8',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr',
         width: '100%',
+        background: '#0C0C0E',
       }}
     >
       {/* Column 1 */}
       <div
         style={{
-          borderRight: '1px solid #E8E8E8',
+          borderRight: '1px solid rgba(255,255,255,0.07)',
           padding: '48px 40px',
           textAlign: 'center',
           display: 'flex',
@@ -30,19 +29,19 @@ export default function Stats() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(40px, 5.5vw, 60px)',
-            color: '#111111',
+            color: '#F0EDE8',
             letterSpacing: '-0.04em',
             lineHeight: 1,
           }}
         >
-          912<span style={{ color: '#D72638' }}>M</span>
+          912<span style={{ color: '#00E5C3' }}>M</span>
         </div>
         <p
           style={{
             fontFamily: 'var(--font-dm-sans)',
             fontWeight: 300,
             fontSize: '13px',
-            color: '#AEAEB2',
+            color: 'rgba(240,237,232,0.35)',
             maxWidth: '160px',
             margin: '0 auto',
             lineHeight: 1.5,
@@ -55,7 +54,7 @@ export default function Stats() {
       {/* Column 2 */}
       <div
         style={{
-          borderRight: '1px solid #E8E8E8',
+          borderRight: '1px solid rgba(255,255,255,0.07)',
           padding: '48px 40px',
           textAlign: 'center',
           display: 'flex',
@@ -69,19 +68,19 @@ export default function Stats() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(40px, 5.5vw, 60px)',
-            color: '#111111',
+            color: '#F0EDE8',
             letterSpacing: '-0.04em',
             lineHeight: 1,
           }}
         >
-          <span style={{ color: '#D72638' }}>$</span>54<span style={{ color: '#D72638' }}>B</span>
+          <span style={{ color: '#00E5C3' }}>$</span>54<span style={{ color: '#00E5C3' }}>B</span>
         </div>
         <p
           style={{
             fontFamily: 'var(--font-dm-sans)',
             fontWeight: 300,
             fontSize: '13px',
-            color: '#AEAEB2',
+            color: 'rgba(240,237,232,0.35)',
             maxWidth: '160px',
             margin: '0 auto',
             lineHeight: 1.5,
@@ -107,19 +106,19 @@ export default function Stats() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(40px, 5.5vw, 60px)',
-            color: '#111111',
+            color: '#F0EDE8',
             letterSpacing: '-0.04em',
             lineHeight: 1,
           }}
         >
-          54<span style={{ color: '#D72638' }}>%</span>
+          54<span style={{ color: '#00E5C3' }}>%</span>
         </div>
         <p
           style={{
             fontFamily: 'var(--font-dm-sans)',
             fontWeight: 300,
             fontSize: '13px',
-            color: '#AEAEB2',
+            color: 'rgba(240,237,232,0.35)',
             maxWidth: '160px',
             margin: '0 auto',
             lineHeight: 1.5,

@@ -17,12 +17,11 @@ export default function Hero() {
       { el: subRef.current, delay: 340 },
       { el: btnRef.current, delay: 440 },
     ]
-
     elements.forEach(({ el, delay }) => {
       if (!el) return
       el.style.opacity = '0'
       el.style.transform = 'translateY(16px)'
-      el.style.transition = `opacity 0.7s ease, transform 0.7s ease`
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease'
       setTimeout(() => {
         el.style.opacity = '1'
         el.style.transform = 'translateY(0)'
@@ -37,30 +36,38 @@ export default function Hero() {
 
   return (
     <section
-      data-scroll
-      data-scroll-section
       style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#FFFFFF',
-        paddingTop: '52px',
-        paddingBottom: '80px',
-        textAlign: 'center',
+        background: '#0C0C0E',
         padding: '52px 24px 80px',
+        textAlign: 'center',
+        position: 'relative',
       }}
     >
-      <div style={{ maxWidth: '800px', width: '100%' }}>
-        {/* Label */}
+      {/* Subtle radial glow */}
+      <div style={{
+        position: 'absolute',
+        top: '30%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '600px',
+        height: '400px',
+        background: 'radial-gradient(ellipse, rgba(200,169,110,0.06) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: '800px', width: '100%', position: 'relative' }}>
         <div
           ref={labelRef}
           style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 700,
             fontSize: '10px',
-            color: '#AEAEB2',
+            color: 'rgba(200,169,110,0.5)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             marginBottom: '40px',
@@ -70,14 +77,13 @@ export default function Hero() {
           Launching 2026 · India
         </div>
 
-        {/* H1 */}
         <h1
           ref={h1Ref}
           style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(56px, 9vw, 116px)',
-            color: '#111111',
+            color: '#F0EDE8',
             letterSpacing: '-0.05em',
             lineHeight: 0.92,
             margin: 0,
@@ -87,14 +93,13 @@ export default function Hero() {
           Advertising.
         </h1>
 
-        {/* H2 */}
         <h2
           ref={h2Ref}
           style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(56px, 9vw, 116px)',
-            color: '#111111',
+            color: '#C8A96E',
             letterSpacing: '-0.05em',
             lineHeight: 0.92,
             margin: '0 0 40px',
@@ -104,14 +109,13 @@ export default function Hero() {
           Reinvented.
         </h2>
 
-        {/* Sub copy */}
         <p
           ref={subRef}
           style={{
             fontFamily: 'var(--font-dm-sans)',
             fontWeight: 300,
             fontSize: '18px',
-            color: '#6B6B6B',
+            color: 'rgba(240,237,232,0.5)',
             maxWidth: '420px',
             margin: '0 auto 40px',
             lineHeight: 1.65,
@@ -123,7 +127,6 @@ export default function Hero() {
           We found a way back in.
         </p>
 
-        {/* CTA Button */}
         <button
           ref={btnRef}
           onClick={scrollToWaitlist}
@@ -131,17 +134,17 @@ export default function Hero() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 700,
             fontSize: '13px',
-            color: '#FFFFFF',
-            background: '#111111',
+            color: '#0C0C0E',
+            background: '#C8A96E',
             border: 'none',
             borderRadius: '24px',
             padding: '13px 30px',
             cursor: 'pointer',
-            letterSpacing: '0.02em',
+            letterSpacing: '0.04em',
             opacity: 0,
-            transition: 'opacity 0.2s',
+            transition: 'opacity 0.2s, transform 0.2s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = '0.8' }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = '0.85' }}
           onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
         >
           Join the Waitlist
@@ -155,17 +158,13 @@ export default function Hero() {
           bottom: '32px',
           left: '50%',
           transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '4px',
         }}
       >
         <div
           style={{
             width: '1px',
             height: '40px',
-            background: 'linear-gradient(to bottom, transparent, #CCCCCC)',
+            background: 'linear-gradient(to bottom, transparent, rgba(200,169,110,0.4))',
             animation: 'scrollPulse 1.8s ease-in-out infinite',
           }}
         />

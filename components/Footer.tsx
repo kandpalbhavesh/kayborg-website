@@ -5,18 +5,15 @@ import { KMark } from './Nav'
 export default function Footer() {
   return (
     <footer
-      data-scroll
-      data-scroll-section
       style={{
-        background: '#111111',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        background: '#0C0C0E',
+        borderTop: '1px solid rgba(200,169,110,0.1)',
         padding: '28px 40px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
       }}
     >
-      {/* Left: Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <KMark muted />
         <span
@@ -24,20 +21,19 @@ export default function Footer() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 700,
             fontSize: '14px',
-            color: 'rgba(255,255,255,0.25)',
+            color: 'rgba(200,169,110,0.3)',
           }}
         >
           KayBOrg AI
         </span>
       </div>
 
-      {/* Right: Copyright */}
       <p
         style={{
           fontFamily: 'var(--font-dm-sans)',
           fontWeight: 300,
           fontSize: '11px',
-          color: 'rgba(255,255,255,0.2)',
+          color: 'rgba(240,237,232,0.18)',
           margin: 0,
         }}
       >

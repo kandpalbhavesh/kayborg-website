@@ -6,14 +6,13 @@ export default function ProgressBar() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const updateProgress = () => {
+    const update = () => {
       const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      setProgress(Math.min(100, Math.max(0, pct)))
+      setProgress(docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0)
     }
-    window.addEventListener('scroll', updateProgress, { passive: true })
-    return () => window.removeEventListener('scroll', updateProgress)
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
   }, [])
 
   return (
@@ -24,7 +23,7 @@ export default function ProgressBar() {
         left: 0,
         height: '2px',
         width: `${progress}%`,
-        background: '#D72638',
+        background: 'linear-gradient(to right, #C8A96E, #00E5C3)',
         zIndex: 200,
         transition: 'width 0.1s linear',
         pointerEvents: 'none',
