@@ -31,7 +31,7 @@ export default function Nav() {
   const linkStyle = {
     fontFamily: 'var(--font-dm-sans)',
     fontSize: '13px',
-    color: 'rgba(255,255,255,0.45)' as string,
+    color: 'rgba(0,0,0,0.45)' as string,
     background: 'none' as const,
     border: 'none' as const,
     cursor: 'pointer' as const,
@@ -54,21 +54,21 @@ export default function Nav() {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0 clamp(16px, 3.5vw, 32px)',
-          background: scrolled ? 'rgba(8,8,8,0.88)' : 'transparent',
+          background: scrolled ? 'rgba(255,255,255,0.9)' : 'transparent',
           backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.07)' : '1px solid transparent',
           transition: 'background 0.4s ease, border-color 0.4s ease',
         }}
       >
         {/* Brand */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'default', userSelect: 'none' }}>
-          <Logo size={20} />
+          <Logo size={20} color="#0A0A0A" />
           <span style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 700,
             fontSize: '14px',
-            color: '#FFFFFF',
+            color: '#0A0A0A',
             letterSpacing: '-0.02em',
           }}>
             KayBOrg AI
@@ -82,8 +82,8 @@ export default function Nav() {
               key={label}
               onClick={() => nav('waitlist')}
               style={linkStyle}
-              onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#0A0A0A' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.45)' }}
             >
               {label}
             </button>
@@ -94,8 +94,8 @@ export default function Nav() {
         <div className="nav-right" style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <button
             style={{ ...linkStyle, padding: '7px 12px' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#0A0A0A' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.45)' }}
           >
             Log in
           </button>
@@ -105,8 +105,8 @@ export default function Nav() {
               fontFamily: 'var(--font-dm-sans)',
               fontWeight: 500,
               fontSize: '13px',
-              color: '#080808',
-              background: '#FFFFFF',
+              color: '#FFFFFF',
+              background: '#0A0A0A',
               border: 'none',
               borderRadius: '20px',
               padding: '7px 18px',
@@ -116,7 +116,7 @@ export default function Nav() {
               letterSpacing: '0.01em',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.opacity = '0.88'
+              e.currentTarget.style.opacity = '0.82'
               e.currentTarget.style.transform = 'scale(0.97)'
             }}
             onMouseLeave={e => {
@@ -147,7 +147,7 @@ export default function Nav() {
           ].map((b, i) => (
             <span key={i} style={{
               display: 'block', width: b.w, height: '1.5px',
-              background: '#FFFFFF', borderRadius: '2px',
+              background: '#0A0A0A', borderRadius: '2px',
               transition: 'transform 0.3s, opacity 0.3s',
               transform: b.t, opacity: b.o ?? 1,
             }} />
@@ -160,7 +160,7 @@ export default function Nav() {
         aria-hidden={!menuOpen}
         style={{
           position: 'fixed', inset: 0, zIndex: 99,
-          background: 'rgba(8,8,8,0.97)', backdropFilter: 'blur(24px)',
+          background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(24px)',
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center', gap: '44px',
           opacity: menuOpen ? 1 : 0,
@@ -171,7 +171,7 @@ export default function Nav() {
         {['For Brands', 'For Creators'].map(label => (
           <button key={label} onClick={() => nav('waitlist')} style={{
             fontFamily: 'var(--font-syne)', fontWeight: 700,
-            fontSize: 'clamp(28px, 8vw, 44px)', color: '#FFFFFF',
+            fontSize: 'clamp(28px, 8vw, 44px)', color: '#0A0A0A',
             background: 'none', border: 'none', cursor: 'pointer',
             letterSpacing: '-0.03em',
           }}>
@@ -180,8 +180,8 @@ export default function Nav() {
         ))}
         <button onClick={() => nav('waitlist')} style={{
           fontFamily: 'var(--font-dm-sans)', fontWeight: 500,
-          fontSize: '14px', color: '#080808',
-          background: '#FFFFFF', border: 'none', borderRadius: '24px',
+          fontSize: '14px', color: '#FFFFFF',
+          background: '#0A0A0A', border: 'none', borderRadius: '24px',
           padding: '14px 40px', cursor: 'pointer', marginTop: '8px',
         }}>
           Get early access

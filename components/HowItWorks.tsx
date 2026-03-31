@@ -2,9 +2,6 @@
 
 import { useEffect, useRef } from 'react'
 
-// "How It Works" — 3 steps with numbered reveals and a connecting timeline line
-// Parallel structure (Linear pattern): each step has the same visual weight
-
 const STEPS = [
   {
     num: '01',
@@ -29,12 +26,9 @@ export default function HowItWorks() {
   useEffect(() => {
     const items = ref.current?.querySelectorAll('.step-card')
     if (!items?.length) return
-
     const io = new IntersectionObserver(
       entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target) }
-        })
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target) } })
       },
       { threshold: 0.15 },
     )
@@ -43,23 +37,19 @@ export default function HowItWorks() {
   }, [])
 
   return (
-    <section
-      id="how-it-works"
-      style={{
-        background: '#080808',
-        padding: 'clamp(80px, 12vh, 140px) clamp(20px, 5vw, 48px)',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-      }}
-    >
+    <section id="how-it-works" style={{
+      background: '#F7F7F7',
+      padding: 'clamp(80px, 12vh, 140px) clamp(20px, 5vw, 48px)',
+      borderTop: '1px solid rgba(0,0,0,0.07)',
+    }}>
       <div style={{ maxWidth: '840px', margin: '0 auto' }}>
-        {/* Header */}
         <div style={{ marginBottom: 'clamp(56px, 8vh, 96px)' }}>
           <div style={{
             fontFamily: 'var(--font-dm-mono)',
             fontSize: '9px',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.28)',
+            color: 'rgba(0,0,0,0.3)',
             marginBottom: '16px',
           }}>
             How it works
@@ -68,7 +58,7 @@ export default function HowItWorks() {
             fontFamily: 'var(--font-syne)',
             fontWeight: 800,
             fontSize: 'clamp(32px, 5.5vw, 64px)',
-            color: '#FFFFFF',
+            color: '#0A0A0A',
             letterSpacing: '-0.04em',
             lineHeight: 1,
             margin: 0,
@@ -77,61 +67,47 @@ export default function HowItWorks() {
           </h2>
         </div>
 
-        {/* Steps */}
         <div ref={ref} style={{ position: 'relative' }}>
-          {/* Timeline line (desktop) */}
           <div className="timeline-line" style={{
             position: 'absolute',
-            left: '19px',
-            top: '12px',
-            bottom: '12px',
+            left: '19px', top: '12px', bottom: '12px',
             width: '1px',
-            background: 'linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%)',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.04) 100%)',
           }} />
 
           {STEPS.map((step, i) => (
-            <div
-              key={i}
-              className="step-card reveal"
-              style={{
-                display: 'flex',
-                gap: 'clamp(24px, 4vw, 56px)',
-                alignItems: 'flex-start',
-                marginBottom: i < STEPS.length - 1 ? 'clamp(44px, 7vh, 72px)' : 0,
-                transitionDelay: `${i * 140}ms`,
-              }}
-            >
-              {/* Number circle */}
+            <div key={i} className="step-card reveal" style={{
+              display: 'flex',
+              gap: 'clamp(24px, 4vw, 56px)',
+              alignItems: 'flex-start',
+              marginBottom: i < STEPS.length - 1 ? 'clamp(44px, 7vh, 72px)' : 0,
+              transitionDelay: `${i * 140}ms`,
+            }}>
               <div style={{
                 flexShrink: 0,
-                width: '40px',
-                height: '40px',
+                width: '40px', height: '40px',
                 borderRadius: '50%',
-                border: '1px solid rgba(255,255,255,0.12)',
-                background: '#080808',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                zIndex: 1,
+                border: '1px solid rgba(0,0,0,0.12)',
+                background: '#F7F7F7',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                position: 'relative', zIndex: 1,
               }}>
                 <span style={{
                   fontFamily: 'var(--font-dm-mono)',
                   fontSize: '10px',
-                  color: 'rgba(255,255,255,0.4)',
+                  color: 'rgba(0,0,0,0.4)',
                   letterSpacing: '0.05em',
                 }}>
                   {step.num}
                 </span>
               </div>
 
-              {/* Content */}
               <div style={{ paddingTop: '8px', flex: 1 }}>
                 <h3 style={{
                   fontFamily: 'var(--font-syne)',
                   fontWeight: 700,
                   fontSize: 'clamp(20px, 2.8vw, 28px)',
-                  color: '#FFFFFF',
+                  color: '#0A0A0A',
                   letterSpacing: '-0.03em',
                   margin: '0 0 12px',
                 }}>
@@ -141,7 +117,7 @@ export default function HowItWorks() {
                   fontFamily: 'var(--font-dm-sans)',
                   fontWeight: 300,
                   fontSize: 'clamp(14px, 1.6vw, 16px)',
-                  color: 'rgba(255,255,255,0.48)',
+                  color: 'rgba(0,0,0,0.5)',
                   lineHeight: 1.7,
                   maxWidth: '480px',
                   margin: 0,
@@ -155,9 +131,7 @@ export default function HowItWorks() {
       </div>
 
       <style>{`
-        @media (max-width: 600px) {
-          .timeline-line { display: none; }
-        }
+        @media (max-width: 600px) { .timeline-line { display: none; } }
       `}</style>
     </section>
   )

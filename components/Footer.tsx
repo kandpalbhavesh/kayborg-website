@@ -9,7 +9,7 @@ export default function Footer() {
   const dim = {
     fontFamily: 'var(--font-dm-sans)',
     fontSize: '12px',
-    color: 'rgba(255,255,255,0.24)',
+    color: 'rgba(0,0,0,0.3)',
     background: 'none' as const,
     border: 'none' as const,
     cursor: 'pointer' as const,
@@ -20,8 +20,8 @@ export default function Footer() {
 
   return (
     <footer style={{
-      background: '#080808',
-      borderTop: '1px solid rgba(255,255,255,0.06)',
+      background: '#FFFFFF',
+      borderTop: '1px solid rgba(0,0,0,0.07)',
       padding: '20px clamp(16px, 3.5vw, 32px)',
       display: 'flex',
       alignItems: 'center',
@@ -29,35 +29,30 @@ export default function Footer() {
       flexWrap: 'wrap',
       gap: '16px',
     }}>
-      {/* Brand */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.4 }}>
-        <Logo size={14} />
-        <span style={{ ...dim, cursor: 'default', color: 'rgba(255,255,255,0.4)', fontSize: '12px', fontFamily: 'var(--font-syne)', fontWeight: 700, letterSpacing: '-0.01em' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Logo size={14} color="#0A0A0A" />
+        <span style={{ ...dim, cursor: 'default', color: 'rgba(0,0,0,0.45)', fontFamily: 'var(--font-syne)', fontWeight: 700, letterSpacing: '-0.01em' }}>
           KayBOrg AI
         </span>
         <span style={{ ...dim, cursor: 'default', marginLeft: '4px' }}>© 2026</span>
       </div>
 
-      {/* Social */}
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
         {SOCIAL.map(s => (
-          <button
-            key={s} style={dim}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.24)' }}
+          <button key={s} style={dim}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.75)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.3)' }}
           >
             {s}
           </button>
         ))}
       </div>
 
-      {/* Legal */}
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
         {LEGAL.map(l => (
-          <button
-            key={l} style={dim}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.24)' }}
+          <button key={l} style={dim}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.6)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.3)' }}
           >
             {l}
           </button>
