@@ -1,27 +1,19 @@
 /** @type {import('next').NextConfig} */
 
 const securityHeaders = [
-  // Prevent DNS prefetch leaking browsing info
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
-  // HSTS — force HTTPS for 2 years, including subdomains
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-  // Prevent clickjacking
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  // Prevent MIME-type sniffing
   { key: 'X-Content-Type-Options', value: 'nosniff' },
-  // Control referrer data
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  // Disable browser features not in use
   {
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
   },
-  // Content Security Policy
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      // Next.js requires unsafe-inline/unsafe-eval for hydration in dev; nonce approach needed for strict prod
       "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
@@ -33,9 +25,7 @@ const securityHeaders = [
       "upgrade-insecure-requests",
     ].join('; '),
   },
-  // Prevent XSS in older browsers
   { key: 'X-XSS-Protection', value: '1; mode=block' },
-  // Cross-origin isolation
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
   { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
 ]
@@ -43,20 +33,101 @@ const securityHeaders = [
 const nextConfig = {
   async headers() {
     return [
+      // Aggressive cache for static assets — 1 year
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // Cache fonts — 1 year
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // Cache public assets — 30 days
+      {
+        source: '/(.*)\\.(svg|png|jpg|jpeg|webp|ico)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=86400' },
+        ],
+      },
+      // Security headers on all routes
       {
         source: '/(.*)',
         headers: securityHeaders,
       },
     ]
   },
-  webpack: (config) => {
+
+  // Remove X-Powered-By fingerprint
+  poweredByHeader: false,
+
+  // Strict mode
+  reactStrictMode: true,
+
+  // Compress output
+  compress: true,
+
+  // Optimise images
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 2592000, // 30 days
+    deviceSizes: [375, 768, 1024, 1280, 1920],
+    imageSizes: [16, 32, 64, 128, 256],
+  },
+
+  // Compiler optimisations
+  compiler: {
+    // Remove console.* in production
+    removeConsole: process.env.NODE_ENV === 'production'
+      ? { exclude: ['error', 'warn'] }
+      : false,
+  },
+
+  webpack: (config, { dev, isServer }) => {
+    // Tree-shake unused lodash etc
     config.resolve.fallback = { fs: false }
+
+    // Production bundle optimisation
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        splitChunks: {
+          chunks: 'all',
+          minSize: 20000,
+          maxSize: 244000,
+          cacheGroups: {
+            // Separate GSAP into its own chunk — only loaded when needed
+            gsap: {
+              test: /[\\/]node_modules[\\/]gsap[\\/]/,
+              name: 'gsap',
+              chunks: 'async',
+              priority: 20,
+            },
+            // Vendor chunk
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+              priority: 10,
+            },
+          },
+        },
+      }
+    }
+
     return config
   },
-  // Disable powered-by header to avoid fingerprinting
-  poweredByHeader: false,
-  // Strict mode catches potential issues early
-  reactStrictMode: true,
+
+  // Experimental: faster builds + smaller output
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['gsap'],
+  },
 }
 
 export default nextConfig

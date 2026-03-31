@@ -1,61 +1,63 @@
 'use client'
 
-// Cosmos-style minimal single-line footer
-// © year | Connect | Legal — pure white palette
+import Logo from './Logo'
 
-const connect = ['Instagram', 'TikTok', 'X', 'LinkedIn']
-const more    = ['Terms', 'Privacy']
+const SOCIAL = ['Instagram', 'TikTok', 'X', 'LinkedIn']
+const LEGAL  = ['Terms', 'Privacy']
 
 export default function Footer() {
-  const mutedStyle = {
+  const dim = {
     fontFamily: 'var(--font-dm-sans)',
     fontSize: '12px',
-    color: 'rgba(255,255,255,0.28)',
+    color: 'rgba(255,255,255,0.24)',
     background: 'none' as const,
     border: 'none' as const,
     cursor: 'pointer' as const,
     padding: '0' as const,
+    letterSpacing: '0.01em',
     transition: 'color 0.2s',
   }
 
   return (
     <footer style={{
-      background: '#0D0D0D',
-      borderTop: '1px solid rgba(255,255,255,0.05)',
-      padding: '20px clamp(16px, 3vw, 32px)',
+      background: '#080808',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
+      padding: '20px clamp(16px, 3.5vw, 32px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       flexWrap: 'wrap',
-      gap: '12px',
+      gap: '16px',
     }}>
-      {/* Copyright */}
-      <span style={{ ...mutedStyle, cursor: 'default' }}>
-        © 2026 KayBOrg AI
-      </span>
+      {/* Brand */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: 0.4 }}>
+        <Logo size={14} />
+        <span style={{ ...dim, cursor: 'default', color: 'rgba(255,255,255,0.4)', fontSize: '12px', fontFamily: 'var(--font-syne)', fontWeight: 700, letterSpacing: '-0.01em' }}>
+          KayBOrg AI
+        </span>
+        <span style={{ ...dim, cursor: 'default', marginLeft: '4px' }}>© 2026</span>
+      </div>
 
-      {/* Social links */}
+      {/* Social */}
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        {connect.map(s => (
+        {SOCIAL.map(s => (
           <button
-            key={s}
-            style={mutedStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)' }}
+            key={s} style={dim}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.24)' }}
           >
             {s}
           </button>
         ))}
       </div>
 
-      {/* Legal links */}
+      {/* Legal */}
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        {more.map(l => (
+        {LEGAL.map(l => (
           <button
-            key={l}
-            style={mutedStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)' }}
+            key={l} style={dim}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.24)' }}
           >
             {l}
           </button>

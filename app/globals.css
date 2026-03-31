@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Cosmos-exact brand tokens ──────────────── */
+/* ── Design tokens ───────────────────────────── */
 :root {
-  --bg:       #0D0D0D;
+  --bg:       #080808;
+  --bg-2:     #0F0F0F;
+  --bg-3:     #141414;
   --text:     #FFFFFF;
-  --text-2:   rgba(255,255,255,0.45);
-  --text-3:   rgba(255,255,255,0.2);
-  --border:   rgba(255,255,255,0.06);
+  --text-2:   rgba(255,255,255,0.58);
+  --text-3:   rgba(255,255,255,0.26);
+  --border:   rgba(255,255,255,0.08);
+  --surface:  rgba(255,255,255,0.04);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Reset ───────────────────────────────────── */
@@ -24,10 +28,11 @@ html {
   scrollbar-gutter: stable;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  background: #080808;
 }
 
 body {
-  background: #0D0D0D;
+  background: #080808;
   color: #FFFFFF;
   font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -37,57 +42,59 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── Film grain overlay ──────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.45s steps(2) infinite;
+}
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-1.5%, -1.5%); }
+  50%  { transform: translate(1.5%,  1.5%); }
+  75%  { transform: translate(-1.5%, 1.5%); }
+  100% { transform: translate(1.5%, -1.5%); }
+}
+
 /* ── Scrollbar ───────────────────────────────── */
 ::-webkit-scrollbar        { width: 4px; }
-::-webkit-scrollbar-track  { background: #0D0D0D; }
-::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.12); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+::-webkit-scrollbar-track  { background: #080808; }
+::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
 
 /* ── Focus ring ──────────────────────────────── */
 :focus-visible {
-  outline: 1.5px solid rgba(255,255,255,0.6);
+  outline: 1.5px solid rgba(255,255,255,0.5);
   outline-offset: 3px;
   border-radius: 3px;
 }
 :focus:not(:focus-visible) { outline: none; }
 
-/* ── Reduce motion ───────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /* ── Selection ───────────────────────────────── */
-::selection {
-  background: rgba(255,255,255,0.15);
-  color: #FFFFFF;
-}
+::selection { background: rgba(255,255,255,0.12); color: #FFFFFF; }
 
-/* ── Headings ────────────────────────────────── */
+/* ── Typography ──────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-syne), ui-sans-serif, sans-serif;
   font-weight: 800;
 }
 
 /* ── Button reset ────────────────────────────── */
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-}
+button { font-family: inherit; cursor: pointer; border: none; background: none; padding: 0; }
 
 /* ── Touch targets ───────────────────────────── */
 @media (max-width: 767px) {
   button, a { min-height: 44px; display: inline-flex; align-items: center; }
 }
 
-/* ── Screen reader only ──────────────────────── */
+/* ── SR only ─────────────────────────────────── */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
@@ -97,20 +104,66 @@ button {
 /* ── Scroll reveal ───────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(26px);
+  transition: opacity 0.85s var(--ease-out-expo),
+              transform 0.85s var(--ease-out-expo);
 }
-.reveal.in-view {
-  opacity: 1;
-  transform: translateY(0);
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+/* ── Word-by-word reveal ─────────────────────── */
+.word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.word-inner {
+  display: inline-block;
+  transform: translateY(108%);
+  opacity: 0;
+  transition: transform 0.8s var(--ease-out-expo),
+              opacity 0.5s ease;
+}
+.word-inner.up { transform: translateY(0); opacity: 1; }
+
+/* ── Marquee ─────────────────────────────────── */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 32s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Glow pulse ──────────────────────────────── */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.06; transform: scale(1); }
+  50%       { opacity: 0.11; transform: scale(1.05); }
 }
 
-/* Hero load-in (no scroll needed) */
+/* ── Counter roll (clip from top) ────────────── */
+.counter-clip { overflow: hidden; display: inline-block; }
+
+/* ── Fade-up keyframe (load-in) ──────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero-in {
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+.fade-up { animation: fadeUp 0.9s var(--ease-out-expo) both; }
+
+/* ── Reduce motion ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  body::after { animation: none; }
+  .word-inner { transform: none; opacity: 1; }
+  .reveal { opacity: 1; transform: none; }
 }

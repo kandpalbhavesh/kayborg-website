@@ -7,6 +7,7 @@ const syne = Syne({
   weight: ["700", "800"],
   variable: "--font-syne",
   display: "swap",
+  preload: true,
 });
 
 const dmSans = DM_Sans({
@@ -14,6 +15,7 @@ const dmSans = DM_Sans({
   weight: ["300", "400"],
   variable: "--font-dm-sans",
   display: "swap",
+  preload: true,
 });
 
 const instrumentSerif = Instrument_Serif({
@@ -22,6 +24,7 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
   variable: "--font-instrument-serif",
   display: "swap",
+  preload: false, // only used in footer — non-critical
 });
 
 const figtree = Figtree({
@@ -29,6 +32,7 @@ const figtree = Figtree({
   weight: ["300", "400", "500"],
   variable: "--font-figtree",
   display: "swap",
+  preload: false, // only used in footer — non-critical
 });
 
 const dmMono = DM_Mono({
@@ -36,18 +40,19 @@ const dmMono = DM_Mono({
   weight: ["400"],
   variable: "--font-dm-mono",
   display: "swap",
+  preload: false, // only used in footer — non-critical
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kayborgai.com"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "KayBorg AI — Advertising. Reinvented.",
+  title: "KayBOrg AI — The Ad That Lives Inside the Story.",
   description:
-    "Brand products embedded directly inside creator videos at pixel level. Every viewer sees a different product. Unblockable. Launching 2026 in India.",
+    "KayBOrg AI embeds brand products inside creator videos at the pixel level — frame by frame, unblockable by design. Launching 2026 in India.",
   openGraph: {
-    title: "KayBorg AI — Advertising. Reinvented.",
-    description: "The ad that cannot be blocked.",
+    title: "KayBOrg AI — The Ad That Lives Inside the Story.",
+    description: "Brand placement at the pixel level. Unblockable by design.",
     url: siteUrl,
     images: [
       {
@@ -61,9 +66,20 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "KayBorg AI — Advertising. Reinvented.",
-    description: "The ad that cannot be blocked.",
+    title: "KayBOrg AI — The Ad That Lives Inside the Story.",
+    description: "Brand placement at the pixel level. Unblockable by design.",
     images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -73,7 +89,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${dmSans.variable} ${instrumentSerif.variable} ${figtree.variable} ${dmMono.variable}`}>
+    <html
+      lang="en"
+      className={`${syne.variable} ${dmSans.variable} ${instrumentSerif.variable} ${figtree.variable} ${dmMono.variable}`}
+    >
+      <head>
+        {/* Preconnect to Google Fonts to reduce DNS + TLS latency */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* DNS prefetch for analytics if added later */}
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      </head>
       <body>{children}</body>
     </html>
   );
