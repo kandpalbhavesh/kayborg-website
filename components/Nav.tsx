@@ -2,9 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 
-// Whitelisted scroll targets — prevents CSS selector injection
 const ALLOWED_SCROLL_IDS: Record<string, string> = {
-  '#chapter-problem': 'chapter-problem',
   '#waitlist': 'waitlist',
 }
 
@@ -15,8 +13,9 @@ function safeScrollTo(id: string) {
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
+// KayBOrg K-mark logomark
 const KMark = ({ muted = false }: { muted?: boolean }) => (
-  <svg width="26" height="26" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 38 38" fill="none" aria-hidden="true">
     <rect
       x="1" y="1" width="36" height="36" rx="7"
       stroke={muted ? 'rgba(200,169,110,0.3)' : '#C8A96E'}
@@ -37,15 +36,13 @@ const KMark = ({ muted = false }: { muted?: boolean }) => (
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [announced, setAnnounced] = useState(true)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -56,150 +53,106 @@ export default function Nav() {
     setTimeout(() => safeScrollTo(id), 50)
   }, [])
 
-  const linkStyle = {
+  const navLinkStyle = {
     fontFamily: 'var(--font-dm-sans)',
-    fontWeight: 400,
     fontSize: '13px',
-    color: 'rgba(240,237,232,0.45)' as string,
+    color: 'rgba(240,237,232,0.5)' as string,
     background: 'none' as const,
     border: 'none' as const,
     cursor: 'pointer' as const,
-    padding: 0,
+    padding: '0' as const,
     transition: 'color 0.2s',
   }
 
   return (
     <>
-      {/* Cosmos-style announcement bar */}
-      {announced && (
-        <div
-          aria-live="polite"
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0,
-            zIndex: 102,
-            height: '36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(200,169,110,0.06)',
-            borderBottom: '1px solid rgba(200,169,110,0.1)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
-        >
-          <span style={{
-            fontFamily: 'var(--font-dm-mono)',
-            fontSize: '10px',
-            color: 'rgba(200,169,110,0.65)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-          }}>
-            Launching 2026 · India · Seed round open
-          </span>
-          <button
-            onClick={() => setAnnounced(false)}
-            aria-label="Dismiss announcement"
-            style={{
-              position: 'absolute',
-              right: '16px',
-              background: 'none',
-              border: 'none',
-              color: 'rgba(200,169,110,0.45)',
-              fontSize: '16px',
-              cursor: 'pointer',
-              padding: '4px 8px',
-              lineHeight: 1,
-            }}
-          >
-            ×
-          </button>
-        </div>
-      )}
-
       <nav
         role="navigation"
         aria-label="Main navigation"
         style={{
           position: 'fixed',
-          top: announced ? '36px' : 0, left: 0, right: 0,
+          top: 0, left: 0, right: 0,
           height: '52px',
           zIndex: 100,
-          background: 'rgba(12,12,14,0.92)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: scrolled ? '1px solid rgba(200,169,110,0.15)' : '1px solid transparent',
-          transition: 'border-color 0.3s ease, top 0.3s ease',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 clamp(16px, 4vw, 40px)',
+          padding: '0 clamp(16px, 3vw, 32px)',
+          background: scrolled ? 'rgba(12,12,14,0.92)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
+          transition: 'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
         }}
       >
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
           <KMark />
           <span style={{
             fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
+            fontWeight: 800,
             fontSize: '15px',
             color: '#F0EDE8',
-            letterSpacing: '-0.01em',
+            letterSpacing: '-0.02em',
           }}>
             KayBOrg AI
           </span>
         </div>
 
-        {/* Desktop centre links */}
-        <div className="nav-desktop-links" style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+        {/* Desktop centre links — cosmos "Discover · Careers" style */}
+        <div className="nav-center" style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
           <button
-            onClick={() => handleNav('#chapter-problem')}
-            style={linkStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = '#C8A96E' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.45)' }}
+            onClick={() => handleNav('#waitlist')}
+            style={navLinkStyle}
+            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
           >
-            How it works
+            For Brands
           </button>
           <button
             onClick={() => handleNav('#waitlist')}
-            style={linkStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = '#C8A96E' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.45)' }}
+            style={navLinkStyle}
+            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
           >
-            Early Access
+            For Creators
           </button>
         </div>
 
-        {/* Desktop CTA */}
-        <button
-          className="nav-desktop-cta"
-          onClick={() => handleNav('#waitlist')}
-          style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: '12px',
-            color: '#C8A96E',
-            background: 'transparent',
-            border: '1px solid rgba(200,169,110,0.4)',
-            borderRadius: '24px',
-            padding: '8px 20px',
-            cursor: 'pointer',
-            letterSpacing: '0.04em',
-            transition: 'background 0.2s, color 0.2s, border-color 0.2s',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = '#C8A96E'
-            e.currentTarget.style.color = '#0C0C0E'
-            e.currentTarget.style.borderColor = '#C8A96E'
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.color = '#C8A96E'
-            e.currentTarget.style.borderColor = 'rgba(200,169,110,0.4)'
-          }}
-        >
-          Early Access
-        </button>
+        {/* Desktop right — cosmos "Log in · Sign up" style */}
+        <div className="nav-right" style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+          <button
+            style={{
+              ...navLinkStyle,
+              padding: '7px 12px',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
+          >
+            Log in
+          </button>
+          <button
+            onClick={() => handleNav('#waitlist')}
+            style={{
+              fontFamily: 'var(--font-syne)',
+              fontWeight: 700,
+              fontSize: '12px',
+              color: '#0C0C0E',
+              background: '#F0EDE8',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '7px 16px',
+              cursor: 'pointer',
+              letterSpacing: '0.01em',
+              transition: 'opacity 0.2s',
+              minHeight: '36px',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = '0.82' }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+          >
+            Join Waitlist
+          </button>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -208,43 +161,27 @@ export default function Nav() {
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            alignItems: 'flex-end',
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '8px', display: 'flex', flexDirection: 'column',
+            gap: '5px', alignItems: 'flex-end',
           }}
         >
-          <span style={{
-            display: 'block',
-            width: menuOpen ? '22px' : '22px',
-            height: '1.5px',
-            background: '#C8A96E',
-            borderRadius: '2px',
-            transition: 'transform 0.3s, opacity 0.3s',
-            transform: menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none',
-          }} />
-          <span style={{
-            display: 'block',
-            width: '16px',
-            height: '1.5px',
-            background: '#C8A96E',
-            borderRadius: '2px',
-            transition: 'opacity 0.3s',
-            opacity: menuOpen ? 0 : 1,
-          }} />
-          <span style={{
-            display: 'block',
-            width: '22px',
-            height: '1.5px',
-            background: '#C8A96E',
-            borderRadius: '2px',
-            transition: 'transform 0.3s, opacity 0.3s',
-            transform: menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none',
-          }} />
+          {[
+            { w: '22px', transform: menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none' },
+            { w: '16px', opacity: menuOpen ? 0 : 1 },
+            { w: '22px', transform: menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none' },
+          ].map((bar, i) => (
+            <span key={i} style={{
+              display: 'block',
+              width: (bar as { w: string }).w,
+              height: '1.5px',
+              background: '#F0EDE8',
+              borderRadius: '2px',
+              transition: 'transform 0.3s, opacity 0.3s',
+              transform: (bar as { transform?: string }).transform,
+              opacity: (bar as { opacity?: number }).opacity ?? 1,
+            }} />
+          ))}
         </button>
       </nav>
 
@@ -252,72 +189,52 @@ export default function Nav() {
       <div
         aria-hidden={!menuOpen}
         style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 99,
+          position: 'fixed', inset: 0, zIndex: 99,
           background: 'rgba(12,12,14,0.98)',
           backdropFilter: 'blur(20px)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
           gap: '40px',
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? 'auto' : 'none',
           transition: 'opacity 0.3s ease',
         }}
       >
-        {[
-          { label: 'How it works', id: '#chapter-problem' },
-          { label: 'Early Access', id: '#waitlist' },
-        ].map(({ label, id }) => (
+        {(['For Brands', 'For Creators'] as const).map(label => (
           <button
-            key={id}
-            onClick={() => handleNav(id)}
+            key={label}
+            onClick={() => handleNav('#waitlist')}
             style={{
-              fontFamily: 'var(--font-syne)',
-              fontWeight: 700,
+              fontFamily: 'var(--font-syne)', fontWeight: 700,
               fontSize: 'clamp(28px, 8vw, 40px)',
-              color: '#F0EDE8',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              letterSpacing: '-0.02em',
-              transition: 'color 0.2s',
+              color: '#F0EDE8', background: 'none', border: 'none',
+              cursor: 'pointer', letterSpacing: '-0.02em',
             }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#C8A96E' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#F0EDE8' }}
           >
             {label}
           </button>
         ))}
-
         <button
           onClick={() => handleNav('#waitlist')}
           style={{
-            marginTop: '16px',
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: '13px',
-            color: '#0C0C0E',
-            background: '#C8A96E',
-            border: 'none',
-            borderRadius: '24px',
-            padding: '14px 36px',
+            marginTop: '8px',
+            fontFamily: 'var(--font-syne)', fontWeight: 700,
+            fontSize: '13px', color: '#0C0C0E',
+            background: '#F0EDE8', border: 'none',
+            borderRadius: '24px', padding: '14px 36px',
             cursor: 'pointer',
-            letterSpacing: '0.04em',
           }}
         >
-          Join the Waitlist
+          Join Waitlist
         </button>
       </div>
 
       <style>{`
         .nav-hamburger { display: none !important; }
         @media (max-width: 767px) {
-          .nav-desktop-links { display: none !important; }
-          .nav-desktop-cta   { display: none !important; }
-          .nav-hamburger     { display: flex !important; }
+          .nav-center  { display: none !important; }
+          .nav-right   { display: none !important; }
+          .nav-hamburger { display: flex !important; }
         }
       `}</style>
     </>

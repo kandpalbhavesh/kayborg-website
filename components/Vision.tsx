@@ -1,68 +1,71 @@
 'use client'
 
 export default function Vision() {
+  const scrollToWaitlist = () => {
+    try {
+      const el = document.getElementById('waitlist')
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    } catch { /* silent */ }
+  }
+
   return (
     <section style={{
-      borderTop: '1px solid rgba(255,255,255,0.07)',
-      borderBottom: '1px solid rgba(255,255,255,0.07)',
-      padding: 'clamp(100px, 14vh, 180px) clamp(20px, 5vw, 48px)',
       background: '#0C0C0E',
+      padding: 'clamp(80px, 13vh, 160px) clamp(20px, 5vw, 48px)',
       textAlign: 'center',
-      position: 'relative',
-      overflow: 'hidden',
     }}>
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 'min(700px, 90vw)', height: '300px',
-        background: 'radial-gradient(ellipse, rgba(200,169,110,0.05) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ position: 'relative', maxWidth: 'min(680px, 100%)', margin: '0 auto' }}>
-        {/* Cosmos-style editorial label */}
+      <div style={{ maxWidth: '580px', margin: '0 auto' }}>
+        {/* Cosmos-style serif manifesto — paragraph 1 */}
         <p style={{
           fontFamily: 'var(--font-instrument-serif)',
           fontStyle: 'italic',
-          fontSize: '14px',
-          color: 'rgba(200,169,110,0.5)',
-          letterSpacing: '0.04em',
-          margin: '0 0 28px',
+          fontWeight: 400,
+          fontSize: 'clamp(22px, 4vw, 44px)',
+          color: '#F0EDE8',
+          lineHeight: 1.28,
+          margin: '0 0 clamp(32px, 5vh, 56px)',
         }}>
-          On the future of attention
+          KayBOrg is where advertising breathes.
+          Where brands and creators move together.
+          And attention is earned frame by frame.
         </p>
 
-        {/* Cosmos-style decorative rule */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '48px' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
-          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#C8A96E', opacity: 0.4 }} />
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
-        </div>
-
-        <blockquote style={{
+        {/* Paragraph 2 */}
+        <p style={{
           fontFamily: 'var(--font-instrument-serif)',
-          fontWeight: 400,
           fontStyle: 'italic',
-          fontSize: 'clamp(22px, 4vw, 50px)',
-          color: '#F0EDE8',
-          margin: '0 auto 48px',
-          lineHeight: 1.2,
-          letterSpacing: '-0.01em',
+          fontWeight: 400,
+          fontSize: 'clamp(20px, 3.5vw, 38px)',
+          color: 'rgba(240,237,232,0.5)',
+          lineHeight: 1.3,
+          margin: '0 0 clamp(40px, 6vh, 72px)',
         }}>
-          Every once in a while something comes along
-          and you wonder how advertising
-          ever worked any other way.
+          A place to begin. To become.
+          Where products find their audience
+          without ever interrupting them.
+        </p>
 
-          This is that thing.
-        </blockquote>
-
-        {/* Bottom rule */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
-          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#C8A96E', opacity: 0.4 }} />
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
-        </div>
+        {/* Cosmos-style text CTA */}
+        <button
+          onClick={scrollToWaitlist}
+          style={{
+            fontFamily: 'var(--font-dm-sans)',
+            fontWeight: 400,
+            fontSize: 'clamp(14px, 2vw, 16px)',
+            color: 'rgba(240,237,232,0.5)',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            letterSpacing: '0.01em',
+            textDecoration: 'underline',
+            textUnderlineOffset: '4px',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
+        >
+          Come build with us. Get started →
+        </button>
       </div>
     </section>
   )
