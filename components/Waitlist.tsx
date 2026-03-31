@@ -145,7 +145,6 @@ export default function Waitlist() {
               type="submit"
               disabled={submitted}
               onMouseMove={onBtnMouseMove}
-              onMouseLeave={onBtnMouseLeave}
               style={{
                 background: submitted ? 'rgba(0,0,0,0.08)' : '#0A0A0A',
                 color: submitted ? 'rgba(0,0,0,0.5)' : '#FFFFFF',
@@ -165,7 +164,7 @@ export default function Waitlist() {
                   : 'transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.2s',
               }}
               onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.84' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+              onMouseLeave={e => { onBtnMouseLeave(); e.currentTarget.style.opacity = '1' }}
             >
               {submitted ? 'Done ✓' : 'Reserve your spot'}
             </button>
