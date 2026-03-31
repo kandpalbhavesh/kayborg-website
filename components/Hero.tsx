@@ -47,7 +47,7 @@ export default function Hero() {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#0C0C0E',
-        padding: 'clamp(72px, 10vh, 100px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
+        padding: 'clamp(108px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
         textAlign: 'center',
         position: 'relative',
       }}
@@ -62,6 +62,48 @@ export default function Hero() {
         background: 'radial-gradient(ellipse, rgba(200,169,110,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
+
+      {/* Cosmos-style video frame mosaic — left edge */}
+      {([
+        { top: '18%', left: '0%', w: 140, h: 84, rot: -1.5, op: 0.05 },
+        { top: '38%', left: '2%', w: 110, h: 66, rot: 1, op: 0.04 },
+        { top: '58%', left: '0%', w: 160, h: 96, rot: -2, op: 0.05 },
+        { top: '76%', left: '3%', w: 120, h: 72, rot: 1.5, op: 0.04 },
+      ] as { top: string; left: string; w: number; h: number; rot: number; op: number }[]).map((f, i) => (
+        <div key={`l${i}`} style={{
+          position: 'absolute',
+          top: f.top,
+          left: f.left,
+          width: f.w,
+          height: f.h,
+          borderRadius: '4px',
+          border: '1px solid rgba(200,169,110,0.09)',
+          background: `linear-gradient(135deg, rgba(200,169,110,${f.op}) 0%, rgba(0,229,195,${f.op * 0.55}) 100%)`,
+          transform: `rotate(${f.rot}deg)`,
+          pointerEvents: 'none',
+        }} />
+      ))}
+
+      {/* Cosmos-style video frame mosaic — right edge */}
+      {([
+        { top: '22%', right: '0%', w: 150, h: 90, rot: 1.5, op: 0.04 },
+        { top: '44%', right: '2%', w: 130, h: 78, rot: -1.5, op: 0.05 },
+        { top: '64%', right: '0%', w: 100, h: 60, rot: 2, op: 0.04 },
+        { top: '80%', right: '3%', w: 140, h: 84, rot: -1, op: 0.04 },
+      ] as { top: string; right: string; w: number; h: number; rot: number; op: number }[]).map((f, i) => (
+        <div key={`r${i}`} style={{
+          position: 'absolute',
+          top: f.top,
+          right: f.right,
+          width: f.w,
+          height: f.h,
+          borderRadius: '4px',
+          border: '1px solid rgba(200,169,110,0.09)',
+          background: `linear-gradient(135deg, rgba(0,229,195,${f.op * 0.55}) 0%, rgba(200,169,110,${f.op}) 100%)`,
+          transform: `rotate(${f.rot}deg)`,
+          pointerEvents: 'none',
+        }} />
+      ))}
 
       <div style={{ maxWidth: 'min(800px, 100%)', width: '100%', position: 'relative' }}>
         {/* Label */}

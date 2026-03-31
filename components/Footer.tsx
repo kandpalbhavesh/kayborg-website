@@ -149,6 +149,17 @@ function IconYouTube() {
   )
 }
 
+function IconTikTok() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M16.5 3h-2.8v12.2a2.7 2.7 0 01-2.7 2.5 2.7 2.7 0 01-2.7-2.7 2.7 2.7 0 012.7-2.7c.26 0 .51.04.74.1V9.5a6.2 6.2 0 00-.74-.05 6.15 6.15 0 00-6.15 6.15 6.15 6.15 0 006.15 6.15 6.15 6.15 0 006.14-6.15V9.2a7.9 7.9 0 004.62 1.47V7.88A4.72 4.72 0 0116.5 3z"
+        fill="#C8A96E"
+      />
+    </svg>
+  )
+}
+
 // ── Nav links data ────────────────────────────
 const navLeft = ['About', 'Platform', 'Pricing', 'Blog']
 const navRight = ['For Brands', 'For Creators', 'API Docs', 'Privacy Policy']
@@ -175,7 +186,7 @@ export default function Footer() {
 
             {/* Social icons */}
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-              {[IconLinkedIn, IconX, IconInstagram, IconYouTube].map((Icon, i) => (
+              {[IconInstagram, IconTikTok, IconX, IconLinkedIn, IconYouTube].map((Icon, i) => (
                 <button
                   key={i}
                   style={{
@@ -219,7 +230,7 @@ export default function Footer() {
               margin: 0,
               maxWidth: '240px',
             }}>
-              &ldquo;Join us. Let&apos;s put your brand inside every video.&rdquo;
+              &ldquo;Attention isn&apos;t bought. It&apos;s earned — frame by frame.&rdquo;
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>

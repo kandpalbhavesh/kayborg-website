@@ -37,6 +37,7 @@ const KMark = ({ muted = false }: { muted?: boolean }) => (
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [announced, setAnnounced] = useState(true)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -69,19 +70,66 @@ export default function Nav() {
 
   return (
     <>
+      {/* Cosmos-style announcement bar */}
+      {announced && (
+        <div
+          aria-live="polite"
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0,
+            zIndex: 102,
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(200,169,110,0.06)',
+            borderBottom: '1px solid rgba(200,169,110,0.1)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
+          <span style={{
+            fontFamily: 'var(--font-dm-mono)',
+            fontSize: '10px',
+            color: 'rgba(200,169,110,0.65)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+          }}>
+            Launching 2026 · India · Seed round open
+          </span>
+          <button
+            onClick={() => setAnnounced(false)}
+            aria-label="Dismiss announcement"
+            style={{
+              position: 'absolute',
+              right: '16px',
+              background: 'none',
+              border: 'none',
+              color: 'rgba(200,169,110,0.45)',
+              fontSize: '16px',
+              cursor: 'pointer',
+              padding: '4px 8px',
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <nav
         role="navigation"
         aria-label="Main navigation"
         style={{
           position: 'fixed',
-          top: 0, left: 0, right: 0,
+          top: announced ? '36px' : 0, left: 0, right: 0,
           height: '52px',
           zIndex: 100,
           background: 'rgba(12,12,14,0.92)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: scrolled ? '1px solid rgba(200,169,110,0.15)' : '1px solid transparent',
-          transition: 'border-color 0.3s ease',
+          transition: 'border-color 0.3s ease, top 0.3s ease',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
