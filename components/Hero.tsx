@@ -15,11 +15,10 @@ export default function Hero() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError]         = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const rootRef  = useRef<HTMLDivElement>(null)
 
-  // Fade in on mount
-  const rootRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const t = setTimeout(() => rootRef.current?.classList.add('hero-visible'), 80)
+    const t = setTimeout(() => rootRef.current?.classList.add('hi-visible'), 60)
     return () => clearTimeout(t)
   }, [])
 
@@ -30,86 +29,97 @@ export default function Hero() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (submitCount >= 3) { setError('Too many attempts. Please try again later.'); return }
+    if (submitCount >= 3) { setError('Too many attempts.'); return }
     const s = email.trim().replace(/<[^>]*>/g, '')
-    if (!isValidEmail(s)) { setError('Enter a valid email address.'); inputRef.current?.focus(); return }
+    if (!isValidEmail(s)) { setError('Enter a valid email.'); inputRef.current?.focus(); return }
     submitCount++
     setSubmitted(true)
     setError('')
   }
 
   return (
-    <>
-      {/* Top-left brand mark */}
-      <header style={{
+    <div ref={rootRef} className="hi-root">
+
+      {/* Nav */}
+      <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0,
-        height: '56px', zIndex: 100,
-        display: 'flex', alignItems: 'center',
-        padding: '0 clamp(24px, 4vw, 48px)',
+        height: '60px', zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 clamp(24px, 5vw, 56px)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '9px', userSelect: 'none' }}>
-          <Logo size={16} color="#0A0A0A" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', userSelect: 'none' }}>
+          <Logo size={16} color="rgba(255,255,255,0.85)" />
           <span style={{
             fontFamily: 'var(--font-syne)',
             fontWeight: 700, fontSize: '13px',
-            color: '#0A0A0A', letterSpacing: '-0.01em',
+            color: 'rgba(255,255,255,0.85)',
+            letterSpacing: '-0.01em',
           }}>
             KayBOrg AI
           </span>
         </div>
-      </header>
+
+        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+          <a
+            href="mailto:hello@kayborg.ai"
+            style={{
+              fontFamily: 'var(--font-dm-sans)',
+              fontSize: '13px', color: 'rgba(255,255,255,0.35)',
+              textDecoration: 'none',
+              letterSpacing: '0.01em',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.8)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)' }}
+          >
+            Contact
+          </a>
+        </div>
+      </nav>
 
       {/* Main */}
-      <main
-        ref={rootRef}
-        className="hero-root"
-        style={{
-          minHeight: '100dvh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 'clamp(96px, 14vh, 140px) clamp(24px, 5vw, 64px) clamp(64px, 10vh, 100px)',
-          textAlign: 'center',
-          background: '#FFFFFF',
-        }}
-      >
+      <main style={{
+        minHeight: '100dvh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 'clamp(100px, 16vh, 160px) clamp(24px, 5vw, 56px) clamp(80px, 12vh, 120px)',
+      }}>
+
         {/* Headline */}
         <h1 style={{
           fontFamily: 'var(--font-syne)',
           fontWeight: 800,
-          fontSize: 'clamp(44px, 9vw, 120px)',
-          color: '#0A0A0A',
-          letterSpacing: '-0.05em',
-          lineHeight: 0.93,
-          margin: '0 0 clamp(24px, 4vh, 40px)',
-          maxWidth: '14ch',
+          fontSize: 'clamp(36px, 6.5vw, 88px)',
+          color: 'rgba(255,255,255,0.92)',
+          letterSpacing: '-0.04em',
+          lineHeight: 1.0,
+          margin: '0 0 clamp(20px, 3vh, 32px)',
+          maxWidth: '18ch',
         }}>
-          The Ad That Lives Inside the Story.
+          The Ad That Lives<br />Inside the Story.
         </h1>
 
-        {/* One-liner */}
+        {/* Sub */}
         <p style={{
           fontFamily: 'var(--font-dm-sans)',
           fontWeight: 300,
-          fontSize: 'clamp(14px, 1.6vw, 17px)',
-          color: 'rgba(0,0,0,0.42)',
+          fontSize: 'clamp(14px, 1.4vw, 16px)',
+          color: 'rgba(255,255,255,0.38)',
           letterSpacing: '0.01em',
-          lineHeight: 1.65,
-          margin: '0 0 clamp(40px, 6vh, 64px)',
-          maxWidth: '38ch',
+          lineHeight: 1.7,
+          margin: '0 0 clamp(36px, 5vh, 56px)',
+          maxWidth: '42ch',
         }}>
-          AI brand placement inside creator videos.
-          Frame by frame. Unblockable by design.
+          KayBOrg AI embeds brand products inside creator videos
+          at the pixel level — frame by frame, unblockable by design.
+          Launching 2026.
         </p>
 
-        {/* Waitlist form */}
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          aria-label="Join the KayBOrg AI waitlist"
-          style={{ width: '100%', maxWidth: '400px' }}
-        >
+        {/* Waitlist */}
+        <form onSubmit={handleSubmit} noValidate aria-label="Request access" style={{ width: '100%', maxWidth: '380px' }}>
           <div style={{ display: 'flex', width: '100%' }}>
             <input
               ref={inputRef}
@@ -123,38 +133,39 @@ export default function Hero() {
               aria-invalid={!!error}
               style={{
                 flex: 1,
-                background: '#F5F5F5',
-                border: error ? '1px solid rgba(180,40,40,0.4)' : '1px solid rgba(0,0,0,0.1)',
+                background: 'rgba(255,255,255,0.05)',
+                border: error
+                  ? '1px solid rgba(220,80,80,0.5)'
+                  : '1px solid rgba(255,255,255,0.1)',
                 borderRight: 'none',
-                borderRadius: '6px 0 0 6px',
+                borderRadius: '4px 0 0 4px',
                 padding: '11px 16px',
                 fontFamily: 'var(--font-dm-sans)',
                 fontSize: '14px', fontWeight: 400,
-                color: '#0A0A0A',
-                outline: 'none',
-                minWidth: 0,
+                color: 'rgba(255,255,255,0.85)',
+                outline: 'none', minWidth: 0,
                 transition: 'border-color 0.2s',
               }}
-              onFocus={e => { if (!error) e.target.style.borderColor = 'rgba(0,0,0,0.3)' }}
-              onBlur={e  => { if (!error) e.target.style.borderColor = 'rgba(0,0,0,0.1)' }}
+              onFocus={e => { if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.28)' }}
+              onBlur={e  => { if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.1)' }}
             />
             <button
               type="submit"
               disabled={submitted}
               style={{
-                background: submitted ? 'rgba(0,0,0,0.06)' : '#0A0A0A',
-                color: submitted ? 'rgba(0,0,0,0.4)' : '#FFFFFF',
+                background: submitted ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
+                color: submitted ? 'rgba(255,255,255,0.3)' : '#0A0A0A',
                 fontFamily: 'var(--font-dm-sans)',
                 fontWeight: 500, fontSize: '13px',
                 border: 'none',
-                borderRadius: '0 6px 6px 0',
+                borderRadius: '0 4px 4px 0',
                 padding: '11px 20px',
                 cursor: submitted ? 'default' : 'pointer',
                 whiteSpace: 'nowrap',
-                transition: 'opacity 0.2s',
+                transition: 'opacity 0.2s, background 0.2s',
                 letterSpacing: '0.01em',
               }}
-              onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.78' }}
+              onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.75' }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
             >
               {submitted ? 'Done' : 'Request access'}
@@ -164,32 +175,22 @@ export default function Hero() {
           {error && (
             <p role="alert" style={{
               fontFamily: 'var(--font-dm-sans)',
-              fontSize: '12px', color: 'rgba(160,30,30,0.85)',
-              marginTop: '8px', textAlign: 'left',
+              fontSize: '12px', color: 'rgba(220,80,80,0.85)',
+              marginTop: '8px',
             }}>
               {error}
             </p>
           )}
         </form>
-
-        {/* Launch note */}
-        <p style={{
-          fontFamily: 'var(--font-dm-mono)',
-          fontSize: '10px', letterSpacing: '0.16em',
-          textTransform: 'uppercase', color: 'rgba(0,0,0,0.22)',
-          marginTop: 'clamp(28px, 4vh, 44px)',
-        }}>
-          Launching 2026 · India
-        </p>
       </main>
 
       <style>{`
-        .hero-root {
+        .hi-root {
           opacity: 0;
-          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: opacity 1s ease;
         }
-        .hero-visible { opacity: 1; }
+        .hi-visible { opacity: 1; }
       `}</style>
-    </>
+    </div>
   )
 }

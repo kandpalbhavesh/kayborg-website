@@ -28,13 +28,13 @@ export default function ScrollProgress() {
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0,
       height: '2px', zIndex: 200, pointerEvents: 'none',
-      background: 'rgba(0,0,0,0.06)',
+      background: 'rgba(255,255,255,0.06)',
     }}>
       <div
         ref={barRef}
         style={{
           height: '100%', width: '0%',
-          background: '#0A0A0A',
+          background: 'rgba(255,255,255,0.5)',
           transformOrigin: 'left',
           willChange: 'width',
         }}

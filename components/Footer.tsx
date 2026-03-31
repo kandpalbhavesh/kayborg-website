@@ -3,32 +3,31 @@
 export default function Footer() {
   return (
     <footer style={{
-      borderTop: '1px solid rgba(0,0,0,0.07)',
-      padding: '20px clamp(24px, 4vw, 48px)',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
+      padding: '20px clamp(24px, 5vw, 56px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       flexWrap: 'wrap',
       gap: '12px',
-      background: '#FFFFFF',
+      background: '#0A0A0A',
     }}>
       <span style={{
         fontFamily: 'var(--font-dm-sans)',
         fontSize: '12px',
-        color: 'rgba(0,0,0,0.28)',
+        color: 'rgba(255,255,255,0.2)',
         letterSpacing: '0.01em',
       }}>
         © 2026 KayBOrg AI
       </span>
-
       <span style={{
         fontFamily: 'var(--font-dm-mono)',
         fontSize: '10px',
-        letterSpacing: '0.14em',
+        letterSpacing: '0.16em',
         textTransform: 'uppercase',
-        color: 'rgba(0,0,0,0.2)',
+        color: 'rgba(255,255,255,0.14)',
       }}>
-        Confidential
+        Confidential · India
       </span>
     </footer>
   )
