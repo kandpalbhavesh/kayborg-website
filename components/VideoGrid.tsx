@@ -1,6 +1,8 @@
 'use client'
 
-// Cosmos image grid equivalent — video frames with AI-placed brand products
+import { useEffect, useRef } from 'react'
+
+// Cosmos image grid — video frames with AI-placed brand products
 // Cosmos color theme: #0D0D0D bg, white-only accents, no gold/teal
 
 type Frame = {
@@ -44,24 +46,52 @@ const pad: Record<Frame['type'], string> = {
 }
 
 export default function VideoGrid() {
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const frames = gridRef.current?.querySelectorAll('.vframe')
+    if (!frames?.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' },
+    )
+
+    frames.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section style={{ background: '#0D0D0D' }}>
-      <div className="vgrid">
+      <div className="vgrid" ref={gridRef}>
         {frames.map((f, i) => {
           const a = f.luminance
-          // Vary gradient angle per frame for visual diversity
           const angle = 120 + (i % 6) * 20
+          // Cap stagger at 600ms so late items don't wait forever
+          const delay = Math.min(i * 40, 600)
+
           return (
-            <div key={i} className="vframe">
+            <div
+              key={i}
+              className="vframe reveal"
+              style={{ transitionDelay: `${delay}ms` }}
+            >
               <div style={{ paddingBottom: pad[f.type] }} />
               <div style={{ position: 'absolute', inset: 0 }}>
-                {/* Subtle white gradient — cosmos neutral palette */}
+                {/* Subtle white gradient */}
                 <div style={{
                   position: 'absolute', inset: 0,
                   background: `linear-gradient(${angle}deg, rgba(255,255,255,${a}) 0%, transparent 70%)`,
                 }} />
 
-                {/* Brand badge — white bg, dark text (cosmos clean) */}
+                {/* Brand badge */}
                 <div style={{
                   position: 'absolute', top: '8px', left: '8px',
                   background: 'rgba(255,255,255,0.88)',
@@ -76,7 +106,7 @@ export default function VideoGrid() {
                   {f.brand}
                 </div>
 
-                {/* AI placed dot — white */}
+                {/* AI placed dot */}
                 <div style={{
                   position: 'absolute', top: '10px', right: '10px',
                   width: '5px', height: '5px', borderRadius: '50%',
@@ -113,7 +143,8 @@ export default function VideoGrid() {
           overflow: hidden;
           background: #111111;
           cursor: default;
-          transition: opacity 0.2s;
+          transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+                      transform 0.75s cubic-bezier(0.16,1,0.3,1);
         }
         .vframe:hover { opacity: 0.75; }
 

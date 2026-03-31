@@ -1,6 +1,6 @@
 'use client'
 
-// Cosmos color scheme — white numbers, no teal/gold
+import { useEffect, useRef } from 'react'
 
 const stats = [
   {
@@ -22,6 +22,28 @@ const stats = [
 ]
 
 export default function Stats() {
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const cols = gridRef.current?.querySelectorAll('.stats-col')
+    if (!cols?.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.2 },
+    )
+
+    cols.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
       style={{
@@ -31,13 +53,14 @@ export default function Stats() {
         width: '100%',
       }}
     >
-      <div className="stats-grid">
+      <div className="stats-grid" ref={gridRef}>
         {stats.map((s, i) => (
           <div
             key={i}
-            className="stats-col"
+            className="stats-col reveal"
             style={{
               borderRight: i < 2 ? '1px solid rgba(255,255,255,0.07)' : undefined,
+              transitionDelay: `${i * 120}ms`,
             }}
           >
             <div style={{

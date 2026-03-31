@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 // RFC 5322-compliant email validation
 function isValidEmail(email: string): boolean {
@@ -20,6 +20,18 @@ export default function Waitlist() {
   const [error, setError] = useState('')
   const [isValid, setIsValid] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('in-view'); observer.unobserve(el) } },
+      { threshold: 0.15 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Strip any HTML tags from input before storing
@@ -67,7 +79,7 @@ export default function Waitlist() {
         overflow: 'hidden',
       }}
     >
-      <div style={{ position: 'relative', width: '100%', maxWidth: '560px' }}>
+      <div ref={contentRef} className="reveal" style={{ position: 'relative', width: '100%', maxWidth: '560px' }}>
         {/* Label */}
         <div style={{
           fontFamily: 'var(--font-syne)',

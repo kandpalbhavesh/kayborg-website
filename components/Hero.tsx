@@ -1,7 +1,7 @@
 'use client'
 
 // Cosmos-exact hero: large headline + short subheading + white CTA
-// "Your space for inspiration" → "Advertising. Reinvented."
+// Elements animate in on load via .hero-in CSS keyframe
 
 export default function Hero() {
   const go = () => {
@@ -21,35 +21,44 @@ export default function Hero() {
       padding: 'clamp(80px, 12vh, 120px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
       textAlign: 'center',
     }}>
-      {/* Cosmos large headline */}
-      <h1 style={{
-        fontFamily: 'var(--font-syne)',
-        fontWeight: 800,
-        fontSize: 'clamp(48px, 9.5vw, 120px)',
-        color: '#FFFFFF',
-        letterSpacing: '-0.05em',
-        lineHeight: 0.9,
-        margin: '0 0 clamp(16px, 2vw, 24px)',
-      }}>
+      {/* Headline — staggered fade-up */}
+      <h1
+        className="hero-in"
+        style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 800,
+          fontSize: 'clamp(48px, 9.5vw, 120px)',
+          color: '#FFFFFF',
+          letterSpacing: '-0.05em',
+          lineHeight: 0.9,
+          margin: '0 0 clamp(16px, 2vw, 24px)',
+          animationDelay: '0ms',
+        }}
+      >
         Advertising.<br />Reinvented.
       </h1>
 
-      {/* Cosmos subheading — "Discover, search, and save what's next." */}
-      <p style={{
-        fontFamily: 'var(--font-dm-sans)',
-        fontWeight: 300,
-        fontSize: 'clamp(15px, 2vw, 18px)',
-        color: 'rgba(255,255,255,0.45)',
-        maxWidth: '420px',
-        margin: '0 auto clamp(32px, 5vh, 48px)',
-        lineHeight: 1.6,
-      }}>
+      {/* Subheading */}
+      <p
+        className="hero-in"
+        style={{
+          fontFamily: 'var(--font-dm-sans)',
+          fontWeight: 300,
+          fontSize: 'clamp(15px, 2vw, 18px)',
+          color: 'rgba(255,255,255,0.45)',
+          maxWidth: '420px',
+          margin: '0 auto clamp(32px, 5vh, 48px)',
+          lineHeight: 1.6,
+          animationDelay: '120ms',
+        }}
+      >
         Brand products embedded inside creator videos.
         Frame by frame. At pixel level. Unblockable.
       </p>
 
-      {/* Cosmos "Sign up" style CTA — white pill */}
+      {/* CTA */}
       <button
+        className="hero-in"
         onClick={go}
         aria-label="Join the KayBOrg AI waitlist"
         style={{
@@ -65,6 +74,7 @@ export default function Hero() {
           transition: 'opacity 0.2s',
           minHeight: '44px',
           minWidth: '140px',
+          animationDelay: '240ms',
         }}
         onMouseEnter={e => { e.currentTarget.style.opacity = '0.8' }}
         onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
