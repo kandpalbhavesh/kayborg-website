@@ -16,11 +16,7 @@
 }
 
 /* ── Reset ───────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+*, *::before, *::after { box-sizing: border-box; padding: 0; margin: 0; }
 
 /* ── Base ────────────────────────────────────── */
 html {
@@ -40,6 +36,11 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Custom cursor — hide native on pointer devices ── */
+@media (hover: hover) and (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
 }
 
 /* ── Scrollbar ───────────────────────────────── */
@@ -66,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Button reset ────────────────────────────── */
-button { font-family: inherit; cursor: pointer; border: none; background: none; padding: 0; }
+button { font-family: inherit; cursor: none; border: none; background: none; padding: 0; }
 
 /* ── Touch targets ───────────────────────────── */
 @media (max-width: 767px) {
@@ -101,8 +102,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: inline-block;
   transform: translateY(108%);
   opacity: 0;
-  transition: transform 0.8s var(--ease-out-expo),
-              opacity 0.5s ease;
+  transition: transform 0.8s var(--ease-out-expo), opacity 0.5s ease;
 }
 .word-inner.up { transform: translateY(0); opacity: 1; }
 
@@ -115,13 +115,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: flex;
   width: max-content;
   animation: marquee-left 32s linear infinite;
+  will-change: transform;
 }
 .marquee-track:hover { animation-play-state: paused; }
 
 /* ── Glow pulse ──────────────────────────────── */
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50%       { opacity: 0.7; transform: scale(1.05); }
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 0.9; }
 }
 
 /* ── Fade-up keyframe (load-in) ──────────────── */
@@ -130,6 +131,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   to   { opacity: 1; transform: translateY(0); }
 }
 .fade-up { animation: fadeUp 0.9s var(--ease-out-expo) both; }
+
+/* ── Clip-path reveal for headings ──────────────── */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.9s var(--ease-out-expo);
+}
+.clip-reveal.in-view { clip-path: inset(0 0% 0 0); }
 
 /* ── Reduce motion ───────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -141,4 +149,5 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
   .word-inner { transform: none; opacity: 1; }
   .reveal { opacity: 1; transform: none; }
+  .clip-reveal { clip-path: none; }
 }
