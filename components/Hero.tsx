@@ -1,242 +1,195 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Logo from './Logo'
 
-// Hero with:
-// - Word-by-word reveal animation
-// - Parallax: content drifts up at 0.12x scroll speed + fades out
-// - Floating brand badge pills that drift with CSS keyframe animations (desktop)
-// - Ambient radial gradient that breathes
-
-const LINES = [
-  "The Ad That",
-  "Lives Inside",
-  "the Story.",
-]
-
-const FLOAT_BADGES = [
-  { label: 'Nike',      top: '22%', left: '4%',   delay: '0s',    dur: '6s'  },
-  { label: 'boAt',      top: '38%', left: '6%',   delay: '1.2s',  dur: '7s'  },
-  { label: 'Samsung',   top: '58%', left: '3%',   delay: '0.6s',  dur: '8s'  },
-  { label: 'CRED',      top: '20%', right: '5%',  delay: '0.8s',  dur: '7s'  },
-  { label: 'Nykaa',     top: '42%', right: '4%',  delay: '0s',    dur: '6.5s'},
-  { label: 'Adidas',    top: '64%', right: '6%',  delay: '1.5s',  dur: '8.5s'},
-]
-
-function WordReveal({ line, baseDelay }: { line: string; baseDelay: number }) {
-  return (
-    <div style={{ display: 'block' }}>
-      {line.split(' ').map((word, i) => (
-        <span key={i} className="word-wrap" style={{ marginRight: '0.22em' }}>
-          <span className="word-inner" style={{ transitionDelay: `${baseDelay + i * 85}ms` }}>
-            {word}
-          </span>
-        </span>
-      ))}
-    </div>
-  )
+function isValidEmail(e: string) {
+  if (!e || e.length > 254 || /[<>"'`]/.test(e)) return false
+  return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(e)
 }
 
-export default function Hero() {
-  const headRef    = useRef<HTMLHeadingElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
+let submitCount = 0
 
-  // Word reveal on mount
+export default function Hero() {
+  const [email, setEmail]         = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError]         = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // Fade in on mount
+  const rootRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const t = setTimeout(() => {
-      headRef.current?.querySelectorAll('.word-inner').forEach(el => el.classList.add('up'))
-    }, 60)
+    const t = setTimeout(() => rootRef.current?.classList.add('hero-visible'), 80)
     return () => clearTimeout(t)
   }, [])
 
-  // Parallax + fade-out on scroll
-  useEffect(() => {
-    const el = contentRef.current
-    if (!el) return
-    let raf: number
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value.replace(/<[^>]*>/g, '').slice(0, 254))
+    if (error) setError('')
+  }
 
-    const tick = () => {
-      const y = window.scrollY
-      const vh = window.innerHeight
-      el.style.transform  = `translateY(${y * 0.12}px)`
-      el.style.opacity    = String(Math.max(0, 1 - (y / (vh * 0.65))))
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
-  const scrollTo = (id: string) => {
-    try { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }) } catch { /* silent */ }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (submitCount >= 3) { setError('Too many attempts. Please try again later.'); return }
+    const s = email.trim().replace(/<[^>]*>/g, '')
+    if (!isValidEmail(s)) { setError('Enter a valid email address.'); inputRef.current?.focus(); return }
+    submitCount++
+    setSubmitted(true)
+    setError('')
   }
 
   return (
-    <section style={{
-      minHeight: '100vh',
-      background: '#FFFFFF',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 'clamp(100px, 14vh, 140px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
-      textAlign: 'center',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-
-      {/* Floating brand badges — desktop only */}
-      {FLOAT_BADGES.map((b, i) => (
-        <div
-          key={i}
-          aria-hidden="true"
-          className="float-badge"
-          style={{
-            position: 'absolute',
-            top: b.top,
-            left: 'left' in b ? b.left : undefined,
-            right: 'right' in b ? b.right : undefined,
+    <>
+      {/* Top-left brand mark */}
+      <header style={{
+        position: 'fixed', top: 0, left: 0, right: 0,
+        height: '56px', zIndex: 100,
+        display: 'flex', alignItems: 'center',
+        padding: '0 clamp(24px, 4vw, 48px)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '9px', userSelect: 'none' }}>
+          <Logo size={16} color="#0A0A0A" />
+          <span style={{
             fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: '11px',
-            letterSpacing: '0.04em',
-            color: 'rgba(0,0,0,0.3)',
-            background: 'rgba(0,0,0,0.04)',
-            border: '1px solid rgba(0,0,0,0.07)',
-            borderRadius: '20px',
-            padding: '5px 12px',
-            pointerEvents: 'none',
-            userSelect: 'none',
-            animation: `floatBadge ${b.dur} ease-in-out ${b.delay} infinite alternate`,
-            willChange: 'transform',
-          }}
-        >
-          {b.label}
+            fontWeight: 700, fontSize: '13px',
+            color: '#0A0A0A', letterSpacing: '-0.01em',
+          }}>
+            KayBOrg AI
+          </span>
         </div>
-      ))}
+      </header>
 
-      {/* Main content — parallax container */}
-      <div ref={contentRef} style={{ position: 'relative', zIndex: 1, willChange: 'transform, opacity' }}>
-
-        {/* Ambient glow */}
-        <div aria-hidden="true" style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '120%', height: '400px',
-          background: 'radial-gradient(ellipse, rgba(0,0,0,0.04) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
-        {/* Label */}
-        <div className="fade-up" style={{
-          fontFamily: 'var(--font-dm-mono)',
-          fontSize: '10px', letterSpacing: '0.18em',
-          textTransform: 'uppercase', color: 'rgba(0,0,0,0.3)',
-          marginBottom: 'clamp(28px, 4vh, 40px)',
-          animationDelay: '0ms',
-        }}>
-          AI-powered brand placement
-        </div>
-
+      {/* Main */}
+      <main
+        ref={rootRef}
+        className="hero-root"
+        style={{
+          minHeight: '100dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 'clamp(96px, 14vh, 140px) clamp(24px, 5vw, 64px) clamp(64px, 10vh, 100px)',
+          textAlign: 'center',
+          background: '#FFFFFF',
+        }}
+      >
         {/* Headline */}
-        <h1 ref={headRef} style={{
+        <h1 style={{
           fontFamily: 'var(--font-syne)',
           fontWeight: 800,
-          fontSize: 'clamp(52px, 9.5vw, 128px)',
+          fontSize: 'clamp(44px, 9vw, 120px)',
           color: '#0A0A0A',
           letterSpacing: '-0.05em',
-          lineHeight: 0.92,
-          margin: '0 0 clamp(20px, 3vh, 32px)',
+          lineHeight: 0.93,
+          margin: '0 0 clamp(24px, 4vh, 40px)',
+          maxWidth: '14ch',
         }}>
-          {LINES.map((line, i) => (
-            <WordReveal key={i} line={line} baseDelay={100 + i * 180} />
-          ))}
+          The Ad That Lives Inside the Story.
         </h1>
 
-        {/* Subheading */}
-        <p className="fade-up" style={{
+        {/* One-liner */}
+        <p style={{
           fontFamily: 'var(--font-dm-sans)',
           fontWeight: 300,
-          fontSize: 'clamp(15px, 1.8vw, 18px)',
-          color: 'rgba(0,0,0,0.48)',
-          maxWidth: '440px', margin: '0 auto clamp(36px, 5vh, 52px)',
+          fontSize: 'clamp(14px, 1.6vw, 17px)',
+          color: 'rgba(0,0,0,0.42)',
+          letterSpacing: '0.01em',
           lineHeight: 1.65,
-          animationDelay: '820ms',
+          margin: '0 0 clamp(40px, 6vh, 64px)',
+          maxWidth: '38ch',
         }}>
-          KayBOrg AI embeds brand products inside creator videos —
-          frame by frame, pixel by pixel. Unblockable by design.
+          AI brand placement inside creator videos.
+          Frame by frame. Unblockable by design.
         </p>
 
-        {/* CTAs */}
-        <div className="fade-up" style={{
-          display: 'flex', gap: '12px',
-          alignItems: 'center', flexWrap: 'wrap',
-          justifyContent: 'center',
-          animationDelay: '1000ms',
+        {/* Waitlist form */}
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          aria-label="Join the KayBOrg AI waitlist"
+          style={{ width: '100%', maxWidth: '400px' }}
+        >
+          <div style={{ display: 'flex', width: '100%' }}>
+            <input
+              ref={inputRef}
+              type="email" inputMode="email" autoComplete="email"
+              value={submitted ? '' : email}
+              onChange={handleChange}
+              disabled={submitted}
+              maxLength={254}
+              placeholder={submitted ? "You're on the list." : 'your@email.com'}
+              aria-label="Email address"
+              aria-invalid={!!error}
+              style={{
+                flex: 1,
+                background: '#F5F5F5',
+                border: error ? '1px solid rgba(180,40,40,0.4)' : '1px solid rgba(0,0,0,0.1)',
+                borderRight: 'none',
+                borderRadius: '6px 0 0 6px',
+                padding: '11px 16px',
+                fontFamily: 'var(--font-dm-sans)',
+                fontSize: '14px', fontWeight: 400,
+                color: '#0A0A0A',
+                outline: 'none',
+                minWidth: 0,
+                transition: 'border-color 0.2s',
+              }}
+              onFocus={e => { if (!error) e.target.style.borderColor = 'rgba(0,0,0,0.3)' }}
+              onBlur={e  => { if (!error) e.target.style.borderColor = 'rgba(0,0,0,0.1)' }}
+            />
+            <button
+              type="submit"
+              disabled={submitted}
+              style={{
+                background: submitted ? 'rgba(0,0,0,0.06)' : '#0A0A0A',
+                color: submitted ? 'rgba(0,0,0,0.4)' : '#FFFFFF',
+                fontFamily: 'var(--font-dm-sans)',
+                fontWeight: 500, fontSize: '13px',
+                border: 'none',
+                borderRadius: '0 6px 6px 0',
+                padding: '11px 20px',
+                cursor: submitted ? 'default' : 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'opacity 0.2s',
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.78' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+            >
+              {submitted ? 'Done' : 'Request access'}
+            </button>
+          </div>
+
+          {error && (
+            <p role="alert" style={{
+              fontFamily: 'var(--font-dm-sans)',
+              fontSize: '12px', color: 'rgba(160,30,30,0.85)',
+              marginTop: '8px', textAlign: 'left',
+            }}>
+              {error}
+            </p>
+          )}
+        </form>
+
+        {/* Launch note */}
+        <p style={{
+          fontFamily: 'var(--font-dm-mono)',
+          fontSize: '10px', letterSpacing: '0.16em',
+          textTransform: 'uppercase', color: 'rgba(0,0,0,0.22)',
+          marginTop: 'clamp(28px, 4vh, 44px)',
         }}>
-          <button
-            onClick={() => scrollTo('waitlist')}
-            style={{
-              fontFamily: 'var(--font-dm-sans)', fontWeight: 500,
-              fontSize: '14px', color: '#FFFFFF', background: '#0A0A0A',
-              border: 'none', borderRadius: '24px',
-              padding: 'clamp(12px, 2vw, 14px) clamp(28px, 4vw, 36px)',
-              cursor: 'pointer',
-              transition: 'opacity 0.2s, transform 0.2s',
-              minHeight: '46px', letterSpacing: '0.01em',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.82'; e.currentTarget.style.transform = 'scale(0.97)' }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1)' }}
-          >
-            Get early access
-          </button>
-
-          <button
-            onClick={() => scrollTo('how-it-works')}
-            style={{
-              fontFamily: 'var(--font-dm-sans)', fontWeight: 400,
-              fontSize: '14px', color: 'rgba(0,0,0,0.45)',
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: 'clamp(12px, 2vw, 14px) 4px',
-              minHeight: '46px', display: 'flex', alignItems: 'center', gap: '6px',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#0A0A0A' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(0,0,0,0.45)' }}
-          >
-            See how it works
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 2.5L7 11.5M3 7.5L7 11.5L11 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="fade-up" aria-hidden="true" style={{
-        position: 'absolute', bottom: '28px', left: '50%',
-        transform: 'translateX(-50%)', animationDelay: '1400ms',
-      }}>
-        <div style={{
-          width: '1px', height: '40px',
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), transparent)',
-          margin: '0 auto',
-          animation: 'scrollPulse 2s ease-in-out infinite',
-        }} />
-      </div>
+          Launching 2026 · India
+        </p>
+      </main>
 
       <style>{`
-        @keyframes floatBadge {
-          from { transform: translateY(0px) rotate(-1deg); }
-          to   { transform: translateY(-14px) rotate(1deg); }
+        .hero-root {
+          opacity: 0;
+          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes scrollPulse {
-          0%, 100% { opacity: 0.4; }
-          50%       { opacity: 1; }
-        }
-        .float-badge { display: none; }
-        @media (min-width: 1024px) { .float-badge { display: block; } }
+        .hero-visible { opacity: 1; }
       `}</style>
-    </section>
+    </>
   )
 }
