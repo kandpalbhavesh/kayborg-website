@@ -1,5 +1,7 @@
 'use client'
 
+// Cosmos color scheme — white numbers, no teal/gold
+
 const stats = [
   {
     number: '912',
@@ -25,7 +27,7 @@ export default function Stats() {
       style={{
         borderTop: '1px solid rgba(255,255,255,0.07)',
         borderBottom: '1px solid rgba(255,255,255,0.07)',
-        background: '#0C0C0E',
+        background: '#0D0D0D',
         width: '100%',
       }}
     >
@@ -42,19 +44,19 @@ export default function Stats() {
               fontFamily: 'var(--font-syne)',
               fontWeight: 800,
               fontSize: 'clamp(36px, 5.5vw, 60px)',
-              color: '#F0EDE8',
+              color: '#FFFFFF',
               letterSpacing: '-0.04em',
               lineHeight: 1,
             }}>
-              {s.prefix && <span style={{ color: '#00E5C3' }}>{s.prefix}</span>}
+              {s.prefix && <span>{s.prefix}</span>}
               {s.number}
-              <span style={{ color: '#00E5C3' }}>{s.suffix}</span>
+              <span style={{ color: 'rgba(255,255,255,0.5)' }}>{s.suffix}</span>
             </div>
             <p style={{
               fontFamily: 'var(--font-dm-sans)',
               fontWeight: 300,
               fontSize: '13px',
-              color: 'rgba(240,237,232,0.35)',
+              color: 'rgba(255,255,255,0.35)',
               maxWidth: '160px',
               margin: '0 auto',
               lineHeight: 1.5,

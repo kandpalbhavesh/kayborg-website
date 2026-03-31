@@ -38,7 +38,7 @@ export default function Waitlist() {
       return
     }
 
-    // Re-validate server-side style on submit
+    // Re-validate on submit
     const sanitized = email.trim().replace(/<[^>]*>/g, '')
     if (!isValidEmail(sanitized)) {
       setError('Please enter a valid email address.')
@@ -56,7 +56,7 @@ export default function Waitlist() {
       id="waitlist"
       style={{
         minHeight: '100vh',
-        background: '#0C0C0E',
+        background: '#0D0D0D',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -67,23 +67,13 @@ export default function Waitlist() {
         overflow: 'hidden',
       }}
     >
-      {/* Ambient glow */}
-      <div style={{
-        position: 'absolute',
-        top: '40%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '700px', height: '500px',
-        background: 'radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 65%)',
-        pointerEvents: 'none',
-      }} />
-
       <div style={{ position: 'relative', width: '100%', maxWidth: '560px' }}>
         {/* Label */}
         <div style={{
           fontFamily: 'var(--font-syne)',
           fontWeight: 700,
           fontSize: '9px',
-          color: 'rgba(200,169,110,0.4)',
+          color: 'rgba(255,255,255,0.3)',
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           marginBottom: '40px',
@@ -96,13 +86,13 @@ export default function Waitlist() {
           fontFamily: 'var(--font-syne)',
           fontWeight: 800,
           fontSize: 'clamp(36px, 7vw, 88px)',
-          color: '#F0EDE8',
+          color: '#FFFFFF',
           lineHeight: 0.95,
           letterSpacing: '-0.04em',
           margin: '0 0 40px',
         }}>
           The ad that<br />
-          <span style={{ color: '#C8A96E' }}>cannot be blocked.</span>
+          cannot be blocked.
         </h2>
 
         {/* Sub copy */}
@@ -110,7 +100,7 @@ export default function Waitlist() {
           fontFamily: 'var(--font-dm-sans)',
           fontWeight: 300,
           fontSize: 'clamp(14px, 2vw, 16px)',
-          color: 'rgba(240,237,232,0.35)',
+          color: 'rgba(255,255,255,0.35)',
           maxWidth: '400px',
           margin: '0 auto 48px',
           lineHeight: 1.65,
@@ -145,11 +135,11 @@ export default function Waitlist() {
               style={{
                 flex: 1,
                 background: 'rgba(255,255,255,0.04)',
-                border: error ? '1px solid rgba(255,80,80,0.5)' : '1px solid rgba(200,169,110,0.2)',
+                border: error ? '1px solid rgba(255,80,80,0.5)' : '1px solid rgba(255,255,255,0.12)',
                 borderRight: 'none',
                 borderRadius: '24px 0 0 24px',
                 padding: 'clamp(12px, 2vw, 14px) 20px',
-                color: '#F0EDE8',
+                color: '#FFFFFF',
                 fontFamily: 'var(--font-dm-sans)',
                 fontWeight: 400,
                 fontSize: '14px',
@@ -158,18 +148,18 @@ export default function Waitlist() {
                 transition: 'border-color 0.2s',
               }}
               onFocus={e => {
-                if (!error) e.target.style.borderColor = 'rgba(200,169,110,0.5)'
+                if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.3)'
               }}
               onBlur={e => {
-                if (!error) e.target.style.borderColor = 'rgba(200,169,110,0.2)'
+                if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.12)'
               }}
             />
             <button
               type="submit"
               disabled={submitted}
               style={{
-                background: submitted ? '#00E5C3' : '#C8A96E',
-                color: '#0C0C0E',
+                background: submitted ? 'rgba(255,255,255,0.15)' : '#FFFFFF',
+                color: submitted ? '#FFFFFF' : '#0D0D0D',
                 fontFamily: 'var(--font-syne)',
                 fontWeight: 700,
                 fontSize: 'clamp(10px, 1.5vw, 12px)',

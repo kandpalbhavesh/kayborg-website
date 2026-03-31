@@ -13,34 +13,14 @@ function safeScrollTo(id: string) {
   if (el) el.scrollIntoView({ behavior: 'smooth' })
 }
 
-// KayBOrg K-mark logomark
-const KMark = ({ muted = false }: { muted?: boolean }) => (
-  <svg width="24" height="24" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-    <rect
-      x="1" y="1" width="36" height="36" rx="7"
-      stroke={muted ? 'rgba(200,169,110,0.3)' : '#C8A96E'}
-      strokeWidth="1.8" fill="none"
-    />
-    <line x1="12" y1="10" x2="12" y2="28"
-      stroke={muted ? 'rgba(240,237,232,0.2)' : '#F0EDE8'}
-      strokeWidth="2" strokeLinecap="round" />
-    <line x1="12" y1="19" x2="25" y2="10"
-      stroke={muted ? 'rgba(240,237,232,0.2)' : '#F0EDE8'}
-      strokeWidth="2" strokeLinecap="round" />
-    <line x1="12" y1="19" x2="25" y2="28"
-      stroke="#C8A96E" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="28" cy="10" r="2.2" fill="#C8A96E" />
-  </svg>
-)
-
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    const h = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', h, { passive: true })
+    return () => window.removeEventListener('scroll', h)
   }, [])
 
   useEffect(() => {
@@ -53,10 +33,10 @@ export default function Nav() {
     setTimeout(() => safeScrollTo(id), 50)
   }, [])
 
-  const navLinkStyle = {
+  const link = {
     fontFamily: 'var(--font-dm-sans)',
     fontSize: '13px',
-    color: 'rgba(240,237,232,0.5)' as string,
+    color: 'rgba(255,255,255,0.5)' as string,
     background: 'none' as const,
     border: 'none' as const,
     cursor: 'pointer' as const,
@@ -66,6 +46,7 @@ export default function Nav() {
 
   return (
     <>
+      {/* ── Cosmos-exact nav ─────────────────── */}
       <nav
         role="navigation"
         aria-label="Main navigation"
@@ -77,80 +58,71 @@ export default function Nav() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 clamp(16px, 3vw, 32px)',
-          background: scrolled ? 'rgba(12,12,14,0.92)' : 'transparent',
+          padding: '0 clamp(16px, 3vw, 28px)',
+          background: scrolled ? 'rgba(13,13,13,0.92)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
-          transition: 'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
+          transition: 'background 0.3s, border-color 0.3s',
         }}
       >
-        {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
-          <KMark />
-          <span style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 800,
-            fontSize: '15px',
-            color: '#F0EDE8',
-            letterSpacing: '-0.02em',
-          }}>
-            KayBOrg AI
-          </span>
+        {/* Logo — cosmos uses plain wordmark */}
+        <span style={{
+          fontFamily: 'var(--font-syne)',
+          fontWeight: 800,
+          fontSize: '15px',
+          color: '#FFFFFF',
+          letterSpacing: '-0.03em',
+          cursor: 'default',
+          userSelect: 'none',
+        }}>
+          KayBOrg AI
+        </span>
+
+        {/* Centre links — "Discover · Careers" equivalent */}
+        <div className="nav-center" style={{ display: 'flex', gap: '28px' }}>
+          {['For Brands', 'For Creators'].map(label => (
+            <button
+              key={label}
+              onClick={() => handleNav('#waitlist')}
+              style={link}
+              onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
-        {/* Desktop centre links — cosmos "Discover · Careers" style */}
-        <div className="nav-center" style={{ display: 'flex', gap: '28px', alignItems: 'center' }}>
-          <button
-            onClick={() => handleNav('#waitlist')}
-            style={navLinkStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
-          >
-            For Brands
-          </button>
-          <button
-            onClick={() => handleNav('#waitlist')}
-            style={navLinkStyle}
-            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
-          >
-            For Creators
-          </button>
-        </div>
-
-        {/* Desktop right — cosmos "Log in · Sign up" style */}
+        {/* Right — "Log in · Sign up" exact cosmos */}
         <div className="nav-right" style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
           <button
-            style={{
-              ...navLinkStyle,
-              padding: '7px 12px',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#F0EDE8' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(240,237,232,0.5)' }}
+            style={{ ...link, padding: '7px 10px' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
           >
             Log in
           </button>
+          {/* Cosmos "Sign up" = white pill, dark text */}
           <button
             onClick={() => handleNav('#waitlist')}
             style={{
-              fontFamily: 'var(--font-syne)',
-              fontWeight: 700,
-              fontSize: '12px',
-              color: '#0C0C0E',
-              background: '#F0EDE8',
+              fontFamily: 'var(--font-dm-sans)',
+              fontWeight: 500,
+              fontSize: '13px',
+              color: '#0D0D0D',
+              background: '#FFFFFF',
               border: 'none',
               borderRadius: '20px',
               padding: '7px 16px',
               cursor: 'pointer',
-              letterSpacing: '0.01em',
               transition: 'opacity 0.2s',
-              minHeight: '36px',
+              minHeight: '34px',
             }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.82' }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = '0.8' }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
           >
-            Join Waitlist
+            Sign up
           </button>
         </div>
 
@@ -167,78 +139,58 @@ export default function Nav() {
           }}
         >
           {[
-            { w: '22px', transform: menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none' },
-            { w: '16px', opacity: menuOpen ? 0 : 1 },
-            { w: '22px', transform: menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none' },
-          ].map((bar, i) => (
+            { w: '22px', t: menuOpen ? 'translateY(6.5px) rotate(45deg)' : 'none' },
+            { w: '16px', o: menuOpen ? 0 : 1 },
+            { w: '22px', t: menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : 'none' },
+          ].map((b, i) => (
             <span key={i} style={{
-              display: 'block',
-              width: (bar as { w: string }).w,
-              height: '1.5px',
-              background: '#F0EDE8',
-              borderRadius: '2px',
+              display: 'block', width: b.w, height: '1.5px',
+              background: '#FFFFFF', borderRadius: '2px',
               transition: 'transform 0.3s, opacity 0.3s',
-              transform: (bar as { transform?: string }).transform,
-              opacity: (bar as { opacity?: number }).opacity ?? 1,
+              transform: b.t, opacity: b.o ?? 1,
             }} />
           ))}
         </button>
       </nav>
 
-      {/* Mobile full-screen menu */}
-      <div
-        aria-hidden={!menuOpen}
-        style={{
-          position: 'fixed', inset: 0, zIndex: 99,
-          background: 'rgba(12,12,14,0.98)',
-          backdropFilter: 'blur(20px)',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          gap: '40px',
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? 'auto' : 'none',
-          transition: 'opacity 0.3s ease',
-        }}
-      >
-        {(['For Brands', 'For Creators'] as const).map(label => (
-          <button
-            key={label}
-            onClick={() => handleNav('#waitlist')}
-            style={{
-              fontFamily: 'var(--font-syne)', fontWeight: 700,
-              fontSize: 'clamp(28px, 8vw, 40px)',
-              color: '#F0EDE8', background: 'none', border: 'none',
-              cursor: 'pointer', letterSpacing: '-0.02em',
-            }}
-          >
+      {/* Mobile menu */}
+      <div aria-hidden={!menuOpen} style={{
+        position: 'fixed', inset: 0, zIndex: 99,
+        background: 'rgba(13,13,13,0.98)', backdropFilter: 'blur(20px)',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', gap: '40px',
+        opacity: menuOpen ? 1 : 0,
+        pointerEvents: menuOpen ? 'auto' : 'none',
+        transition: 'opacity 0.3s ease',
+      }}>
+        {['For Brands', 'For Creators'].map(label => (
+          <button key={label} onClick={() => handleNav('#waitlist')} style={{
+            fontFamily: 'var(--font-syne)', fontWeight: 700,
+            fontSize: 'clamp(28px, 8vw, 40px)', color: '#FFFFFF',
+            background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '-0.02em',
+          }}>
             {label}
           </button>
         ))}
-        <button
-          onClick={() => handleNav('#waitlist')}
-          style={{
-            marginTop: '8px',
-            fontFamily: 'var(--font-syne)', fontWeight: 700,
-            fontSize: '13px', color: '#0C0C0E',
-            background: '#F0EDE8', border: 'none',
-            borderRadius: '24px', padding: '14px 36px',
-            cursor: 'pointer',
-          }}
-        >
-          Join Waitlist
+        <button onClick={() => handleNav('#waitlist')} style={{
+          marginTop: '8px',
+          fontFamily: 'var(--font-dm-sans)', fontWeight: 500,
+          fontSize: '14px', color: '#0D0D0D',
+          background: '#FFFFFF', border: 'none', borderRadius: '24px',
+          padding: '14px 36px', cursor: 'pointer',
+        }}>
+          Sign up
         </button>
       </div>
 
       <style>{`
         .nav-hamburger { display: none !important; }
         @media (max-width: 767px) {
-          .nav-center  { display: none !important; }
-          .nav-right   { display: none !important; }
+          .nav-center    { display: none !important; }
+          .nav-right     { display: none !important; }
           .nav-hamburger { display: flex !important; }
         }
       `}</style>
     </>
   )
 }
-
-export { KMark }

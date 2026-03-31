@@ -1,106 +1,75 @@
 'use client'
 
-const lines: { text: string; accent?: boolean; spacer?: boolean }[] = [
-  { text: 'The people you are trying to reach' },
-  { text: 'decided they were done a long time ago.' },
-  { spacer: true, text: '' },
-  { text: '912 million of them.', accent: true },
-  { spacer: true, text: '' },
-  { text: 'Ad blockers. Skip buttons.' },
-  { text: 'The second screen.' },
-  { spacer: true, text: '' },
-  { text: 'You cannot fight your way back' },
-  { text: 'into a room you were asked to leave.' },
-  { spacer: true, text: '' },
-  { text: 'We found a different way in.', accent: true },
-]
+// Cosmos-exact hero: large headline + short subheading + white CTA
+// "Your space for inspiration" → "Advertising. Reinvented."
 
 export default function Hero() {
-  const scrollToWaitlist = () => {
+  const go = () => {
     try {
-      const el = document.getElementById('waitlist')
-      if (el) el.scrollIntoView({ behavior: 'smooth' })
+      document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
     } catch { /* silent */ }
   }
 
   return (
     <section style={{
       minHeight: '100vh',
-      background: '#0C0C0E',
+      background: '#0D0D0D',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 'clamp(90px, 13vh, 130px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
+      padding: 'clamp(80px, 12vh, 120px) clamp(20px, 5vw, 48px) clamp(60px, 8vh, 80px)',
       textAlign: 'center',
     }}>
-      {/* Main headline — cosmos large type */}
+      {/* Cosmos large headline */}
       <h1 style={{
         fontFamily: 'var(--font-syne)',
         fontWeight: 800,
-        fontSize: 'clamp(52px, 10vw, 130px)',
-        color: '#F0EDE8',
+        fontSize: 'clamp(48px, 9.5vw, 120px)',
+        color: '#FFFFFF',
         letterSpacing: '-0.05em',
-        lineHeight: 0.88,
-        margin: 0,
+        lineHeight: 0.9,
+        margin: '0 0 clamp(16px, 2vw, 24px)',
       }}>
-        Advertising.
+        Advertising.<br />Reinvented.
       </h1>
-      <h2 style={{
-        fontFamily: 'var(--font-syne)',
-        fontWeight: 800,
-        fontSize: 'clamp(52px, 10vw, 130px)',
-        color: '#C8A96E',
-        letterSpacing: '-0.05em',
-        lineHeight: 0.88,
-        margin: '0 0 clamp(48px, 8vh, 88px)',
+
+      {/* Cosmos subheading — "Discover, search, and save what's next." */}
+      <p style={{
+        fontFamily: 'var(--font-dm-sans)',
+        fontWeight: 300,
+        fontSize: 'clamp(15px, 2vw, 18px)',
+        color: 'rgba(255,255,255,0.45)',
+        maxWidth: '420px',
+        margin: '0 auto clamp(32px, 5vh, 48px)',
+        lineHeight: 1.6,
       }}>
-        Reinvented.
-      </h2>
+        Brand products embedded inside creator videos.
+        Frame by frame. At pixel level. Unblockable.
+      </p>
 
-      {/* Cosmos-style stacked manifesto lines */}
-      <div style={{ maxWidth: '460px', margin: '0 auto clamp(48px, 7vh, 80px)' }}>
-        {lines.map((line, i) =>
-          line.spacer ? (
-            <div key={i} style={{ height: '18px' }} />
-          ) : (
-            <p key={i} style={{
-              fontFamily: 'var(--font-dm-sans)',
-              fontWeight: 300,
-              fontSize: 'clamp(15px, 2.2vw, 19px)',
-              color: line.accent ? '#C8A96E' : 'rgba(240,237,232,0.45)',
-              lineHeight: 1.55,
-              margin: 0,
-            }}>
-              {line.text}
-            </p>
-          )
-        )}
-      </div>
-
-      {/* CTA — cosmos white pill button style */}
+      {/* Cosmos "Sign up" style CTA — white pill */}
       <button
-        onClick={scrollToWaitlist}
+        onClick={go}
         aria-label="Join the KayBOrg AI waitlist"
         style={{
-          fontFamily: 'var(--font-syne)',
-          fontWeight: 700,
-          fontSize: '13px',
-          color: '#0C0C0E',
-          background: '#F0EDE8',
+          fontFamily: 'var(--font-dm-sans)',
+          fontWeight: 500,
+          fontSize: '14px',
+          color: '#0D0D0D',
+          background: '#FFFFFF',
           border: 'none',
           borderRadius: '24px',
           padding: 'clamp(11px, 2vw, 13px) clamp(24px, 4vw, 32px)',
           cursor: 'pointer',
-          letterSpacing: '0.01em',
           transition: 'opacity 0.2s',
           minHeight: '44px',
-          minWidth: '160px',
+          minWidth: '140px',
         }}
-        onMouseEnter={e => { e.currentTarget.style.opacity = '0.82' }}
+        onMouseEnter={e => { e.currentTarget.style.opacity = '0.8' }}
         onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
       >
-        Join the Waitlist →
+        Sign up
       </button>
     </section>
   )
