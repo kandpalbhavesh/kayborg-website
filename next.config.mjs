@@ -101,13 +101,6 @@ const nextConfig = {
           minSize: 20000,
           maxSize: 244000,
           cacheGroups: {
-            // Separate GSAP into its own chunk — only loaded when needed
-            gsap: {
-              test: /[\\/]node_modules[\\/]gsap[\\/]/,
-              name: 'gsap',
-              chunks: 'async',
-              priority: 20,
-            },
             // Vendor chunk
             vendor: {
               test: /[\\/]node_modules[\\/]/,
@@ -126,7 +119,7 @@ const nextConfig = {
   // Experimental: faster builds + smaller output
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['gsap'],
+    optimizePackageImports: [],
   },
 }
 
