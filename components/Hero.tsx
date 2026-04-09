@@ -1,195 +1,244 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Logo from './Logo'
+import { useEffect, useRef } from 'react'
 
-function isValidEmail(e: string) {
-  if (!e || e.length > 254 || /[<>"'`]/.test(e)) return false
-  return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(e)
-}
-
-let submitCount = 0
+const LINES = [
+  ['We', "Don't", 'Follow'],
+  ['The', 'Future.'],
+  ['We', 'Build', 'It.'],
+]
 
 export default function Hero() {
-  const [email, setEmail]         = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError]         = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-  const rootRef  = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => rootRef.current?.classList.add('hi-visible'), 60)
+    const t = setTimeout(() => {
+      if (!rootRef.current) return
+      rootRef.current.classList.add('hi-visible')
+      const words = rootRef.current.querySelectorAll<HTMLElement>('.word-inner')
+      words.forEach((w, i) => {
+        setTimeout(() => w.classList.add('up'), 260 + i * 68)
+      })
+    }, 60)
     return () => clearTimeout(t)
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value.replace(/<[^>]*>/g, '').slice(0, 254))
-    if (error) setError('')
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (submitCount >= 3) { setError('Too many attempts.'); return }
-    const s = email.trim().replace(/<[^>]*>/g, '')
-    if (!isValidEmail(s)) { setError('Enter a valid email.'); inputRef.current?.focus(); return }
-    submitCount++
-    setSubmitted(true)
-    setError('')
-  }
-
   return (
-    <div ref={rootRef} className="hi-root">
+    <div ref={rootRef} className="hi-root hero-shell">
 
-      {/* Nav */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0,
-        height: '60px', zIndex: 100,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 clamp(24px, 5vw, 56px)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', userSelect: 'none' }}>
-          <Logo size={16} color="rgba(255,255,255,0.85)" />
-          <span style={{
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700, fontSize: '13px',
-            color: 'rgba(255,255,255,0.85)',
-            letterSpacing: '-0.01em',
-          }}>
-            KayBOrg AI
-          </span>
+      {/* ── Gradient mesh background ── */}
+      <div aria-hidden className="hero-mesh">
+        <div className="mesh-orb orb-a" />
+        <div className="mesh-orb orb-b" />
+        <div className="mesh-orb orb-c" />
+      </div>
+
+      {/* ── Horizontal rule across full width ── */}
+      <div className="hero-rule" aria-hidden />
+
+      {/* ── Main content ── */}
+      <main className="hero-body">
+
+        {/* Pre-label */}
+        <div className="hero-prelabel fade-up" style={{ animationDelay: '0.28s' }}>
+          Artificial Intelligence · Reinvented
         </div>
 
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-          <a
-            href="mailto:hello@kayborg.ai"
-            style={{
-              fontFamily: 'var(--font-dm-sans)',
-              fontSize: '13px', color: 'rgba(255,255,255,0.35)',
-              textDecoration: 'none',
-              letterSpacing: '0.01em',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.8)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)' }}
-          >
-            Contact
-          </a>
-        </div>
-      </nav>
-
-      {/* Main */}
-      <main style={{
-        minHeight: '100dvh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        padding: 'clamp(100px, 16vh, 160px) clamp(24px, 5vw, 56px) clamp(80px, 12vh, 120px)',
-      }}>
-
-        {/* Headline */}
-        <h1 style={{
-          fontFamily: 'var(--font-syne)',
-          fontWeight: 800,
-          fontSize: 'clamp(36px, 6.5vw, 88px)',
-          color: 'rgba(255,255,255,0.92)',
-          letterSpacing: '-0.04em',
-          lineHeight: 1.0,
-          margin: '0 0 clamp(20px, 3vh, 32px)',
-          maxWidth: '18ch',
-        }}>
-          The Ad That Lives<br />Inside the Story.
+        {/* Headline — word-by-word reveal */}
+        <h1 className="hero-h1">
+          {LINES.map((words, li) => (
+            <span key={li} className="hero-h1__line">
+              {words.map((word, wi) => (
+                <span key={wi} className="word-wrap">
+                  <span className="word-inner">{word}</span>
+                </span>
+              ))}
+            </span>
+          ))}
         </h1>
 
-        {/* Sub */}
-        <p style={{
-          fontFamily: 'var(--font-dm-sans)',
-          fontWeight: 300,
-          fontSize: 'clamp(14px, 1.4vw, 16px)',
-          color: 'rgba(255,255,255,0.38)',
-          letterSpacing: '0.01em',
-          lineHeight: 1.7,
-          margin: '0 0 clamp(36px, 5vh, 56px)',
-          maxWidth: '42ch',
-        }}>
-          KayBOrg AI embeds brand products inside creator videos
-          at the pixel level — frame by frame, unblockable by design.
-          Launching 2026.
+        {/* Sub-copy */}
+        <p className="hero-sub fade-up" style={{ animationDelay: '0.92s' }}>
+          KayBOrg AI is an artificial intelligence company engineering
+          the technologies that will define the next era of human experience.
+          We don&apos;t iterate. We originate.
         </p>
-
-        {/* Waitlist */}
-        <form onSubmit={handleSubmit} noValidate aria-label="Request access" style={{ width: '100%', maxWidth: '380px' }}>
-          <div style={{ display: 'flex', width: '100%' }}>
-            <input
-              ref={inputRef}
-              type="email" inputMode="email" autoComplete="email"
-              value={submitted ? '' : email}
-              onChange={handleChange}
-              disabled={submitted}
-              maxLength={254}
-              placeholder={submitted ? "You're on the list." : 'your@email.com'}
-              aria-label="Email address"
-              aria-invalid={!!error}
-              style={{
-                flex: 1,
-                background: 'rgba(255,255,255,0.05)',
-                border: error
-                  ? '1px solid rgba(220,80,80,0.5)'
-                  : '1px solid rgba(255,255,255,0.1)',
-                borderRight: 'none',
-                borderRadius: '4px 0 0 4px',
-                padding: '11px 16px',
-                fontFamily: 'var(--font-dm-sans)',
-                fontSize: '14px', fontWeight: 400,
-                color: 'rgba(255,255,255,0.85)',
-                outline: 'none', minWidth: 0,
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={e => { if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.28)' }}
-              onBlur={e  => { if (!error) e.target.style.borderColor = 'rgba(255,255,255,0.1)' }}
-            />
-            <button
-              type="submit"
-              disabled={submitted}
-              style={{
-                background: submitted ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
-                color: submitted ? 'rgba(255,255,255,0.3)' : '#0A0A0A',
-                fontFamily: 'var(--font-dm-sans)',
-                fontWeight: 500, fontSize: '13px',
-                border: 'none',
-                borderRadius: '0 4px 4px 0',
-                padding: '11px 20px',
-                cursor: submitted ? 'default' : 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'opacity 0.2s, background 0.2s',
-                letterSpacing: '0.01em',
-              }}
-              onMouseEnter={e => { if (!submitted) e.currentTarget.style.opacity = '0.75' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
-            >
-              {submitted ? 'Done' : 'Request access'}
-            </button>
-          </div>
-
-          {error && (
-            <p role="alert" style={{
-              fontFamily: 'var(--font-dm-sans)',
-              fontSize: '12px', color: 'rgba(220,80,80,0.85)',
-              marginTop: '8px',
-            }}>
-              {error}
-            </p>
-          )}
-        </form>
       </main>
 
+      {/* ── Footer strip ── */}
+      <div className="hero-foot fade-up" style={{ animationDelay: '1.18s' }}>
+        <span className="hero-foot__label">Founded · India · 2024</span>
+        <div className="hero-scroll-hint" aria-hidden>
+          <span className="hero-scroll-hint__text">Scroll</span>
+          <svg width="14" height="22" viewBox="0 0 14 22" fill="none" className="hero-scroll-hint__arrow">
+            <line x1="7" y1="2" x2="7" y2="18" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinecap="round"/>
+            <path d="M2.5 13.5 L7 18 L11.5 13.5" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
       <style>{`
-        .hi-root {
-          opacity: 0;
-          transition: opacity 1s ease;
-        }
+        .hi-root  { opacity: 0; transition: opacity 1.1s ease; }
         .hi-visible { opacity: 1; }
+
+        .hero-shell {
+          position: relative;
+          min-height: 100dvh;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          background: #0A0A0A;
+        }
+
+        /* ── Mesh ── */
+        .hero-mesh {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .mesh-orb {
+          position: absolute;
+          border-radius: 50%;
+          will-change: transform;
+          filter: blur(100px);
+        }
+        .orb-a {
+          width: 55vw; height: 55vw;
+          background: radial-gradient(circle, rgba(80,20,180,0.22) 0%, transparent 72%);
+          top: -18%; left: -8%;
+          animation: orbA 20s ease-in-out infinite;
+        }
+        .orb-b {
+          width: 45vw; height: 45vw;
+          background: radial-gradient(circle, rgba(180,180,200,0.06) 0%, transparent 70%);
+          top: 5%; right: -12%;
+          animation: orbB 26s ease-in-out infinite;
+        }
+        .orb-c {
+          width: 38vw; height: 38vw;
+          background: radial-gradient(circle, rgba(50,10,120,0.14) 0%, transparent 70%);
+          bottom: -12%; left: 35%;
+          animation: orbC 18s ease-in-out infinite;
+        }
+        @keyframes orbA {
+          0%,100% { transform: translate(0,0) scale(1); }
+          40%      { transform: translate(4%, 7%) scale(1.07); }
+          70%      { transform: translate(-3%, 3%) scale(0.96); }
+        }
+        @keyframes orbB {
+          0%,100% { transform: translate(0,0); }
+          45%     { transform: translate(-6%, 5%); }
+        }
+        @keyframes orbC {
+          0%,100% { transform: translate(0,0) scale(1); }
+          55%     { transform: translate(5%,-6%) scale(1.1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .mesh-orb { animation: none !important; }
+        }
+
+        /* ── Rule ── */
+        .hero-rule {
+          position: absolute;
+          top: 60px; left: 0; right: 0;
+          height: 1px;
+          background: rgba(255,255,255,0.04);
+          z-index: 5;
+        }
+
+        /* ── Body ── */
+        .hero-body {
+          position: relative;
+          z-index: 10;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: clamp(100px, 16vh, 160px) clamp(20px, 5vw, 64px) clamp(60px, 8vh, 80px);
+        }
+
+        /* Pre-label */
+        .hero-prelabel {
+          font-family: var(--font-dm-mono);
+          font-size: 10px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.2);
+          margin-bottom: clamp(24px, 4vh, 40px);
+        }
+
+        /* Headline */
+        .hero-h1 {
+          font-family: var(--font-syne);
+          font-weight: 800;
+          font-size: clamp(54px, 9.5vw, 132px);
+          line-height: 0.93;
+          letter-spacing: -0.045em;
+          color: rgba(255,255,255,0.94);
+          margin: 0 0 clamp(28px, 4vh, 44px);
+        }
+        .hero-h1__line {
+          display: block;
+        }
+        .word-wrap {
+          margin-right: 0.24em;
+        }
+        .word-wrap:last-child {
+          margin-right: 0;
+        }
+
+        /* Sub */
+        .hero-sub {
+          font-family: var(--font-dm-sans);
+          font-weight: 300;
+          font-size: clamp(13px, 1.4vw, 16px);
+          color: rgba(255,255,255,0.3);
+          line-height: 1.78;
+          max-width: 44ch;
+          margin: 0;
+        }
+
+        /* ── Foot ── */
+        .hero-foot {
+          position: relative;
+          z-index: 10;
+          padding: clamp(20px, 3vh, 32px) clamp(20px, 5vw, 64px) clamp(24px, 4vh, 40px);
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .hero-foot__label {
+          font-family: var(--font-dm-mono);
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.16);
+        }
+        .hero-scroll-hint {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 7px;
+        }
+        .hero-scroll-hint__text {
+          font-family: var(--font-dm-mono);
+          font-size: 8px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.14);
+        }
+        .hero-scroll-hint__arrow {
+          animation: scrollBounce 2.2s ease-in-out infinite;
+        }
+        @keyframes scrollBounce {
+          0%,100% { transform: translateY(0); opacity: 0.6; }
+          50%      { transform: translateY(5px); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-scroll-hint__arrow { animation: none; }
+        }
       `}</style>
     </div>
   )
